@@ -3,9 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title th:text="${appName}">Finwing</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+     <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
+     <header class="header">
+        <div th:fragment="header" class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">₹</div>
+                <div>
+                    <div class="logo-name">WealthMind</div>
+                    <div class="logo-sub">FINANCE MANAGER</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-btn" data-tab="transactions">Transactions</button>
+                 <button class="tab-btn" data-tab="transactions">Login</button>
+                  <button class="tab-btn" data-tab="transactions">Sign</button>
+            </nav>
+            <div class="status-dot">
+                <div class="dot"></div>
+                <span id="monthLabel">March 2026</span>
+            </div>
+        </div>
+    </header>
     
 </body>
 </html>

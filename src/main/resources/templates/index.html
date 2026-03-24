@@ -8,29 +8,13 @@
      <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="header">
-        <div class="header-inner">
-            <div class="logo">
-                <div class="logo-icon">₹</div>
-                <div>
-                    <div class="logo-name">WealthMind</div>
-                    <div class="logo-sub">FINANCE MANAGER</div>
-                </div>
-            </div>
-            <nav class="nav">
-                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-                <button class="tab-btn" data-tab="transactions">Transactions</button>
-            </nav>
-            <div class="status-dot">
-                <div class="dot"></div>
-                <span id="monthLabel">March 2026</span>
-            </div>
-        </div>
-    </header>
+    <div th:replace="navbar :: header"></div>
+   
 
     <!-- MAIN CONTENT -->
-    <main class="main">
+   
+    
+     <main class="main">
 
         <!-- ===== DASHBOARD TAB ===== -->
         <section id="tab-dashboard" class="tab-content active">
@@ -157,6 +141,6 @@
 
     </main>
 
-    
+   
 </body>
 </html>
