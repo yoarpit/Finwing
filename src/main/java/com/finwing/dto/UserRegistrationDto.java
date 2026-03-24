@@ -1,23 +1,29 @@
-// package com.finwing.dto;
+package com.finwing.dto;
 
+import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
 
-// import jakarta.validation.constraints.Email;
-// import jakarta.validation.constraints.NotBlank;
-// import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-// public class UserRegistrationDto {
-//     @NotBlank(message = "Name is required")
-//     private String fullName;
-    
+@Data // Generates getters, setters, toString, etc.
+@NoArgsConstructor // Generates the empty constructor: UserRegistrationDto()
+@AllArgsConstructor // Generates a constructor with all fields
+public class UserRegistrationDto {
+    private String userName;
+    private String fullName;
+    private String email;
+    private String password;
+    private String mobile_no;
+    private String gender;
+    private String currency;
+    private Boolean is_active;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private java.time.LocalDateTime created_at;
 
-//     @NotBlank(message = "Email is required")
-//     @Email(message = "Invalid email format")
-//     private String email;
+   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+   private java.time.LocalDateTime update_it;
 
-//     @NotBlank(message = "Password is required")
-//     @Size(min = 6, message = "Password must be at least 6 characters")
-//     private String password;
-
-//     // Standard Getters and Setters
-// }
+}
