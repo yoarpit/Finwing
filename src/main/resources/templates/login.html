@@ -220,10 +220,10 @@
         </div>
 
         <div class="card-body">
-            <form action="/api/login" method="POST">
+            <form th:action="@{/login}" method="POST">
                 <div class="field">
                     <label>Email / Username</label>
-                    <input type="text" name="username" placeholder="e.g. rahul@email.com" required />
+                    <input type="email" name="email" placeholder="e.g. rahul@email.com" required />
                 </div>
 
                 <div class="field">
@@ -273,7 +273,7 @@
         </div>
 
         <div class="card-footer">
-            Account nahi hai? <a href="#">Register karein</a>
+        Not Have an Account <a href="#">Register karein</a>
         </div>
     </div>
 </div>

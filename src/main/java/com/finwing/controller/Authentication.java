@@ -3,6 +3,11 @@ package com.finwing.controller;
 import com.finwing.dto.UserRegistrationDto;
 import com.finwing.entity.User;
 import com.finwing.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +42,29 @@ public class Authentication {
         
         userRepository.save(user); // Hibernate saves this to Postgres
         return "redirect:/register?success";
+    }
+
+// @GetMapping("/login")
+//     public String showLoginForm(Model model) {
+//         return "login";
+
+//     }
+
+    @PostMapping("/login")
+    public String loginUser(@RequestParam String email, 
+                            @RequestParam String password, 
+                            HttpSession session, 
+                            Model model) {
+        
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
+            // Store user in session to keep them "logged in"
+            session.setAttribute("loggedInUser", user.get());
+            return "redirect:/dashboard";
+        } else {
+            model.addAttribute("error", "Invalid email or password");
+            return "login";
+        }
     }
 }
