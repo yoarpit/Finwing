@@ -14,6 +14,7 @@ public class HomeController {
         model.addAttribute("message", "Welcome to Finwing ");
         return "index"; // loads index.html
     }
+
 @GetMapping("/login")
 public String login(Model model) {
     model.addAttribute("msg", "Welcome");
@@ -33,5 +34,9 @@ public String transaction(Model model){
 public String showRegisterPage() {
     return "registrationform"; 
 }
+
+
+    
+
 }
 
