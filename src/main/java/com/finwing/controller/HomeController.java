@@ -14,5 +14,10 @@ public class HomeController {
         model.addAttribute("message", "Welcome to Finwing ");
         return "index"; // loads index.html
     }
+
+    @GetMapping("/login")
+    public String Login(Model model){
+        return "login";
+    }
 }
 

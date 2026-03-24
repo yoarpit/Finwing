@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html><!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WealthMind AI – Login</title>
@@ -42,7 +32,7 @@
             flex-direction: column;
         }
 
-        /* NAV */
+        /* NAVBAR */
         .navbar {
             height: 56px;
             background: #111;
@@ -74,7 +64,8 @@
         }
         .nav-link {
             padding: 6px 16px; font-size: 13px;
-            color: var(--muted); border-radius: 4px; cursor: default;
+            color: var(--muted); border-radius: 4px; text-decoration: none;
+            transition: 0.2s;
         }
         .nav-link.active {
             background: var(--gold); color: #0e0e0e; font-weight: 600;
@@ -88,7 +79,7 @@
             border-radius: 50%; display: inline-block;
         }
 
-        /* MAIN */
+        /* MAIN CONTENT */
         .main {
             flex: 1; display: flex;
             align-items: center; justify-content: center;
@@ -101,6 +92,7 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .card-header {
             padding: 20px 28px 16px;
@@ -118,26 +110,7 @@
 
         .card-body { padding: 28px; }
 
-        /* ALERTS */
-        .alert {
-            padding: 10px 14px; border-radius: var(--radius);
-            font-size: 12.5px; margin-bottom: 20px;
-            display: none;
-            font-family: 'IBM Plex Mono', monospace;
-        }
-        .alert.show { display: block; }
-        .alert-error {
-            background: rgba(255,92,92,.08);
-            border: 1px solid rgba(255,92,92,.3);
-            color: var(--red);
-        }
-        .alert-success {
-            background: rgba(61,220,132,.08);
-            border: 1px solid rgba(61,220,132,.3);
-            color: var(--green);
-        }
-
-        /* FIELDS */
+        /* INPUTS */
         .field { margin-bottom: 16px; }
         .field label {
             display: block; font-size: 11px; color: var(--muted);
@@ -145,8 +118,7 @@
             margin-bottom: 7px; font-weight: 500;
         }
         .field-wrap { position: relative; }
-        .field input[type="text"],
-        .field input[type="password"] {
+        .field input {
             width: 100%;
             background: var(--surface2);
             border: 1px solid var(--border2);
@@ -155,20 +127,15 @@
             color: var(--text);
             font-family: 'Inter', sans-serif; font-size: 13.5px;
             outline: none;
-            transition: border-color .2s, background .2s;
+            transition: border-color .2s;
         }
-        .field input:focus {
-            border-color: var(--gold);
-            background: rgba(212,160,23,.04);
-        }
-        .field input::placeholder { color: #3a3a3a; font-size: 13px; }
+        .field input:focus { border-color: var(--gold); }
 
         .toggle-btn {
             position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
             background: none; border: none; cursor: pointer;
-            font-size: 13px; color: var(--muted); padding: 2px;
+            font-size: 16px; color: var(--muted);
         }
-        .toggle-btn:hover { color: var(--gold-text); }
 
         .meta-row {
             display: flex; justify-content: space-between;
@@ -178,177 +145,109 @@
             display: flex; align-items: center; gap: 7px;
             font-size: 12px; color: var(--muted); cursor: pointer;
         }
-        .check-label input[type=checkbox] {
-            accent-color: var(--gold); width: 13px; height: 13px;
-        }
         .forgot-link {
             font-size: 12px; color: var(--gold-text); text-decoration: none;
         }
-        .forgot-link:hover { text-decoration: underline; }
 
         /* BUTTONS */
         .btn-primary {
-            width: 100%; padding: 11px;
+            width: 100%; padding: 12px;
             background: var(--gold); color: #0e0e0e;
             border: none; border-radius: var(--radius);
-            font-family: 'Inter', sans-serif;
-            font-weight: 600; font-size: 13.5px;
-            cursor: pointer; letter-spacing: .3px;
-            transition: background .15s, transform .1s;
+            font-weight: 600; font-size: 14px;
+            cursor: pointer; transition: 0.2s;
         }
-        .btn-primary:hover  { background: #c49010; }
-        .btn-primary:active { transform: scale(.98); }
+        .btn-primary:hover { background: #c49010; }
 
         .divider {
             display: flex; align-items: center; gap: 10px;
             margin: 18px 0; font-size: 11px; color: var(--muted);
-            letter-spacing: .5px; text-transform: uppercase;
+            text-transform: uppercase;
         }
-        .divider::before, .divider::after {
-            content: ''; flex: 1; height: 1px; background: var(--border);
-        }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
         .btn-ghost {
             width: 100%; padding: 10px;
-            background: transparent;
-            border: 1px solid var(--border2);
-            border-radius: var(--radius);
-            color: var(--muted);
-            font-family: 'Inter', sans-serif; font-size: 13px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: border-color .2s, color .2s, background .2s;
+            background: transparent; border: 1px solid var(--border2);
+            border-radius: var(--radius); color: var(--text);
+            font-size: 13px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-ghost:hover {
-            border-color: var(--border); color: var(--text);
-            background: var(--surface2);
-        }
+        .btn-ghost:hover { background: var(--surface2); }
 
-        /* STATS STRIP */
-        .stats-strip {
-            display: flex; border-top: 1px solid var(--border);
-        }
-        .stat-item {
-            flex: 1; padding: 14px 16px;
-            border-right: 1px solid var(--border);
-            text-align: center;
-        }
+        /* STATS */
+        .stats-strip { display: flex; border-top: 1px solid var(--border); background: #131313; }
+        .stat-item { flex: 1; padding: 14px; border-right: 1px solid var(--border); text-align: center; }
         .stat-item:last-child { border-right: none; }
-        .stat-val {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px; font-weight: 600; color: var(--gold-text);
-        }
-        .stat-lbl {
-            font-size: 10px; color: var(--muted);
-            letter-spacing: .6px; text-transform: uppercase; margin-top: 2px;
-        }
+        .stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--gold-text); font-weight: 600; }
+        .stat-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
 
         .card-footer {
-            padding: 16px 28px 22px;
-            border-top: 1px solid var(--border);
+            padding: 16px; border-top: 1px solid var(--border);
             text-align: center; font-size: 12px; color: var(--muted);
         }
-        .card-footer a { color: var(--gold-text); text-decoration: none; font-weight: 500; }
-        .card-footer a:hover { text-decoration: underline; }
+        .card-footer a { color: var(--gold-text); text-decoration: none; }
 
         @media (max-width: 480px) {
-            .navbar { padding: 0 16px; }
             .nav-links, .nav-dot { display: none; }
-            .card-body { padding: 20px 18px; }
-            .card-header { padding: 16px 18px 14px; }
         }
     </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
-    <div class="nav-icon">&#8377;</div>
+    <div class="nav-icon">₹</div>
     <div>
         <span class="nav-brand-name">FINWING</span>
         <span class="nav-brand-sub">Financial Intelligence Platform</span>
     </div>
     <div class="nav-links">
-        <span class="nav-link">Dashboard</span>
-        <span class="nav-link active">Login</span>
-        <span class="nav-link">AI Advisor</span>
+        <a href="#" class="nav-link">Dashboard</a>
+        <a href="#" class="nav-link active">Login</a>
+        <a href="#" class="nav-link">AI Advisor</a>
     </div>
     <div class="nav-dot">
         <span class="nav-dot-circle"></span> March 2026
     </div>
 </nav>
 
-<!-- CONTENT -->
 <div class="main">
     <div class="card">
-
         <div class="card-header">
             <div class="card-label">Account Access</div>
-            <div class="card-title">Sign In</div>
-            <div class="card-sub">Apne WealthMind account mein login karein</div>
+            <div class="card-title">Log In</div>
+            <div class="card-sub">please Log In in your FinWing</div>
         </div>
 
         <div class="card-body">
-
-            <!-- Error message (Spring Security ?error) -->
-            <div class="alert alert-error"
-                 th:classappend="${param.error != null} ? 'show'"
-                 th:if="${param.error != null}">
-                Invalid username ya password. Please retry.
-            </div>
-
-            <!-- Logout message (Spring Security ?logout) -->
-            <div class="alert alert-success"
-                 th:classappend="${param.logout != null} ? 'show'"
-                 th:if="${param.logout != null}">
-                Successfully logged out.
-            </div>
-
-            <!-- FORM -->
-            <form th:action="@{/login}" method="post" id="loginForm">
-                <!-- CSRF Token — Thymeleaf auto-inserts -->
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
+            <form action="/api/login" method="POST">
                 <div class="field">
-                    <label for="username">Email / Username</label>
-                    <div class="field-wrap">
-                        <input type="text"
-                               id="username"
-                               name="username"
-                               placeholder="e.g. rahul@email.com"
-                               autocomplete="username"
-                               required />
-                    </div>
+                    <label>Email / Username</label>
+                    <input type="text" name="username" placeholder="e.g. rahul@email.com" required />
                 </div>
 
                 <div class="field">
-                    <label for="password">Password</label>
+                    <label>Password</label>
                     <div class="field-wrap">
-                        <input type="password"
-                               id="password"
-                               name="password"
-                               placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-                               autocomplete="current-password"
-                               required />
-                        <button type="button" class="toggle-btn" onclick="togglePass()">&#128065;</button>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required />
+                        <button type="button" class="toggle-btn" onclick="togglePass()">👁</button>
                     </div>
                 </div>
 
                 <div class="meta-row">
                     <label class="check-label">
-                        <input type="checkbox" name="remember-me" />
-                        Remember me
+                        <input type="checkbox" name="remember" /> Remember me
                     </label>
-                    <a href="/forgot-password" class="forgot-link">Password bhool gaye?</a>
+                    <a href="#" class="forgot-link">Forget Password</a>
                 </div>
 
                 <button type="submit" class="btn-primary">Login &rarr;</button>
             </form>
 
-            <div class="divider">ya phir</div>
+            <div class="divider">OR</div>
 
-            <button class="btn-ghost" onclick="window.location.href='/oauth2/authorization/google'">
-                <svg width="15" height="15" viewBox="0 0 48 48">
+            <button class="btn-ghost" onclick="alert('Redirecting to Google...')">
+                <svg width="16" height="16" viewBox="0 0 48 48">
                     <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                     <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                     <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
@@ -358,14 +257,13 @@
             </button>
         </div>
 
-        <!-- Stats strip -->
         <div class="stats-strip">
             <div class="stat-item">
                 <div class="stat-val">10K+</div>
                 <div class="stat-lbl">Users</div>
             </div>
             <div class="stat-item">
-                <div class="stat-val">&#8377;2.4L</div>
+                <div class="stat-val">₹2.4L</div>
                 <div class="stat-lbl">Avg. Saved</div>
             </div>
             <div class="stat-item">
@@ -375,20 +273,16 @@
         </div>
 
         <div class="card-footer">
-            Account nahi hai? <a href="/register">Register karein</a>
+            Account nahi hai? <a href="#">Register karein</a>
         </div>
     </div>
 </div>
 
 <script>
     function togglePass() {
-        const f = document.getElementById('password');
-        f.type = f.type === 'password' ? 'text' : 'password';
+        const passInput = document.getElementById('password');
+        passInput.type = passInput.type === 'password' ? 'text' : 'password';
     }
-    // Static preview fallback (non-Thymeleaf)
-    const p = new URLSearchParams(location.search);
-    if (p.has('error'))  document.querySelectorAll('.alert-error').forEach(a => a.classList.add('show'));
-    if (p.has('logout')) document.querySelectorAll('.alert-success').forEach(a => a.classList.add('show'));
 </script>
 </body>
 </html>
