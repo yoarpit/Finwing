@@ -1,11 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title th:text="${appName}">Finwing</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+     <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
+    <div th:replace="navbar :: header"></div>
+   
+
+    <!-- MAIN CONTENT -->
+   
     
+     <main class="main">
+
+        <!-- ===== DASHBOARD TAB ===== -->
+        <section id="tab-dashboard" class="tab-content active">
+            <div class="page-title">
+                <h1>Financial Overview</h1>
+                <p id="dashSubtitle">Loading...</p>
+            </div>
+
+            <!-- Metric Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card income">
+                    <div class="metric-label">TOTAL INCOME</div>
+                    <div class="metric-icon">↑</div>
+                    <div class="metric-value" id="m-income">—</div>
+                </div>
+                <div class="metric-card expense">
+                    <div class="metric-label">TOTAL EXPENSES</div>
+                    <div class="metric-icon">↓</div>
+                    <div class="metric-value" id="m-expenses">—</div>
+                </div>
+                <div class="metric-card balance">
+                    <div class="metric-label">NET BALANCE</div>
+                    <div class="metric-icon">◈</div>
+                    <div class="metric-value" id="m-balance">—</div>
+                </div>
+                <div class="metric-card savings">
+                    <div class="metric-label">SAVINGS RATE</div>
+                    <div class="metric-icon">◎</div>
+                    <div class="metric-value" id="m-savings">—</div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="two-col">
+                <!-- Category Breakdown -->
+                <div class="card">
+                    <h3 class="card-title">EXPENSE BREAKDOWN</h3>
+                    <div id="categoryChart"></div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="card">
+                    <h3 class="card-title">RECENT TRANSACTIONS</h3>
+                    <div id="recentList"></div>
+                </div>
+            </div>
+
+            <!-- Insight Banner -->
+            <div class="card insight-card">
+                <div class="insight-icon">✦</div>
+                <div>
+                    <div class="insight-label">INSIGHT</div>
+                    <p id="insightText" class="insight-text">Loading financial insights...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TRANSACTIONS TAB ===== -->
+        <section id="tab-transactions" class="tab-content">
+            <div class="page-header-row">
+                <div class="page-title">
+                    <h1>Transactions</h1>
+                    <p id="txSubtitle">Loading...</p>
+                </div>
+                <button class="btn-gold" id="toggleFormBtn">+ Add Transaction</button>
+            </div>
+
+            <!-- Add Form -->
+            <div class="card add-form hidden" id="addForm">
+                <h3 class="form-title">NEW TRANSACTION</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="f-desc" placeholder="e.g. Grocery shopping" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (₹)</label>
+                        <input type="number" id="f-amount" placeholder="0" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="f-date" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="f-type" class="input-field">
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="f-category" class="input-field">
+                            <option>Food</option>
+                            <option>Housing</option>
+                            <option>Transport</option>
+                            <option>Health</option>
+                            <option>Entertainment</option>
+                            <option>Savings</option>
+                            <option>Income</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display:flex;align-items:flex-end;">
+                        <button class="btn-gold" id="submitBtn" style="width:100%">Add</button>
+                    </div>
+                </div>
+                <p id="formError" class="form-error hidden"></p>
+            </div>
+
+            <!-- Transaction Table -->
+            <div class="card table-card">
+                <div class="table-header">
+                    <span>Description</span>
+                    <span>Category</span>
+                    <span>Date</span>
+                    <span>Type</span>
+                    <span>Amount</span>
+                    <span>Action</span>
+                </div>
+                <div id="txTableBody"></div>
+            </div>
+        </section>
+
+    </main>
+
+   
 </body>
 </html>

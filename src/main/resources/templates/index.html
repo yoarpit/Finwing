@@ -5,141 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${appName}">Finwing</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/homestyle.css}">
      <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
     <div th:replace="navbar :: header"></div>
    
 
-    <!-- MAIN CONTENT -->
-   
-    
-     <main class="main">
+    <section class="hero-section">
+    <div class="hero-left">
+        <div class="tab-btn active" data-tab="dashboard">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Powered by Intelligence</span>
+        </div>
+        <h1 class="hero-title">
+            Smart Financial Management,<br/>
+            <span style="color: #b4af37;">Built for You</span>
+        </h1>
+        <p class="hero-desc">
+            Take control of your finances with smart insights,
+            automated budgeting, and personalised investment recommendations.
+        </p>
+        <div class="hero-buttons">
+            <a href="/login" class="tab-btn active" data-tab="dashboard">
+                <i class="fa-solid fa-plus"></i> Add Account
+            </a>
+            <a href="/home" class="tab-btn " >
+                <i class="fa-solid fa-chart-line"></i> View Dashboard
+            </a>
+        </div>
+    </div>
 
-        <!-- ===== DASHBOARD TAB ===== -->
-        <section id="tab-dashboard" class="tab-content active">
-            <div class="page-title">
-                <h1>Financial Overview</h1>
-                <p id="dashSubtitle">Loading...</p>
+    <!-- Insight Card (top-right) -->
+    <div class="hero-right">
+        <div class="insight-card tab-btn active" data-tab="dashboard">
+            <div class="insight-header">
+                
+                <h3 class="insight-title">Financial Insight</h3>
             </div>
-
-            <!-- Metric Cards -->
-            <div class="metrics-grid">
-                <div class="metric-card income">
-                    <div class="metric-label">TOTAL INCOME</div>
-                    <div class="metric-icon">↑</div>
-                    <div class="metric-value" id="m-income">—</div>
+            <p class="insight-text">
+                You spent 15% less on dining out this month compared to last month.
+                Great progress towards your savings goal!
+            </p>
+            <div class="insight-progress-wrap">
+                <div class="insight-progress-label">
+                    <span>Progress to ₹5,000 savings goal</span>
+                    <span class="insight-pct" th:text="${savingsGoalProgress + '%'}">68%</span>
                 </div>
-                <div class="metric-card expense">
-                    <div class="metric-label">TOTAL EXPENSES</div>
-                    <div class="metric-icon">↓</div>
-                    <div class="metric-value" id="m-expenses">—</div>
-                </div>
-                <div class="metric-card balance">
-                    <div class="metric-label">NET BALANCE</div>
-                    <div class="metric-icon">◈</div>
-                    <div class="metric-value" id="m-balance">—</div>
-                </div>
-                <div class="metric-card savings">
-                    <div class="metric-label">SAVINGS RATE</div>
-                    <div class="metric-icon">◎</div>
-                    <div class="metric-value" id="m-savings">—</div>
-                </div>
+                
             </div>
+            <a href="/dashboard" class="tab-btn active" data-tab="dashboard">View Details</a>
+        </div>
+    </div>
+</section>
 
-            <!-- Charts Row -->
-            <div class="two-col">
-                <!-- Category Breakdown -->
-                <div class="card">
-                    <h3 class="card-title">EXPENSE BREAKDOWN</h3>
-                    <div id="categoryChart"></div>
-                </div>
 
-                <!-- Recent Transactions -->
-                <div class="card">
-                    <h3 class="card-title">RECENT TRANSACTIONS</h3>
-                    <div id="recentList"></div>
-                </div>
-            </div>
-
-            <!-- Insight Banner -->
-            <div class="card insight-card">
-                <div class="insight-icon">✦</div>
-                <div>
-                    <div class="insight-label">INSIGHT</div>
-                    <p id="insightText" class="insight-text">Loading financial insights...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== TRANSACTIONS TAB ===== -->
-        <section id="tab-transactions" class="tab-content">
-            <div class="page-header-row">
-                <div class="page-title">
-                    <h1>Transactions</h1>
-                    <p id="txSubtitle">Loading...</p>
-                </div>
-                <button class="btn-gold" id="toggleFormBtn">+ Add Transaction</button>
-            </div>
-
-            <!-- Add Form -->
-            <div class="card add-form hidden" id="addForm">
-                <h3 class="form-title">NEW TRANSACTION</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Description</label>
-                        <input type="text" id="f-desc" placeholder="e.g. Grocery shopping" class="input-field">
-                    </div>
-                    <div class="form-group">
-                        <label>Amount (₹)</label>
-                        <input type="number" id="f-amount" placeholder="0" class="input-field">
-                    </div>
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="date" id="f-date" class="input-field">
-                    </div>
-                    <div class="form-group">
-                        <label>Type</label>
-                        <select id="f-type" class="input-field">
-                            <option value="expense">Expense</option>
-                            <option value="income">Income</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="f-category" class="input-field">
-                            <option>Food</option>
-                            <option>Housing</option>
-                            <option>Transport</option>
-                            <option>Health</option>
-                            <option>Entertainment</option>
-                            <option>Savings</option>
-                            <option>Income</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="display:flex;align-items:flex-end;">
-                        <button class="btn-gold" id="submitBtn" style="width:100%">Add</button>
-                    </div>
-                </div>
-                <p id="formError" class="form-error hidden"></p>
-            </div>
-
-            <!-- Transaction Table -->
-            <div class="card table-card">
-                <div class="table-header">
-                    <span>Description</span>
-                    <span>Category</span>
-                    <span>Date</span>
-                    <span>Type</span>
-                    <span>Amount</span>
-                    <span>Action</span>
-                </div>
-                <div id="txTableBody"></div>
-            </div>
-        </section>
-
-    </main>
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="footer">
+    <p>© 2026 WealthMind · Financial Intelligence Platform · All rights reserved.</p>
+</footer>
 
    
 </body>
