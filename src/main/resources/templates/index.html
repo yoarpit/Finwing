@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${appName}">Finwing</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+
      <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
+    
     <div th:replace="navbar :: header"></div>
    
 
@@ -141,6 +144,7 @@
 
     </main>
 
-   
+
+    <script src="/js/theme.js"></script>
 </body>
 </html>
