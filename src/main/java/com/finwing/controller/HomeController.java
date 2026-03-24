@@ -14,5 +14,24 @@ public class HomeController {
         model.addAttribute("message", "Welcome to Finwing ");
         return "index"; // loads index.html
     }
+@GetMapping("/login")
+public String login(Model model) {
+    model.addAttribute("msg", "Welcome");
+    return "login";
+}
+@GetMapping("/Dashboard")
+public String Dashboard(Model model){
+    model.addAttribute("msg","dashboard");
+    return "Dashboard";
+}
+@GetMapping("/transaction")
+public String transaction(Model model){
+    model.addAttribute("msg","transaction");
+    return "transaction";
+}
+@GetMapping("/registrationform")
+public String showRegisterPage() {
+    return "registrationform"; 
+}
 }
 

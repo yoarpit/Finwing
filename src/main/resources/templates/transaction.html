@@ -5,74 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${appName}">Finwing</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <link rel="stylesheet" th:href="@{/css/homestyle.css}">
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+
      <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
+    
     <div th:replace="navbar :: header"></div>
    
 
-    <!-- MAIN CONTENT -->
-   
-    
-     <main class="main">
-
-        <!-- ===== DASHBOARD TAB ===== -->
-        <section id="tab-dashboard" class="tab-content active">
-            <div class="page-title">
-                <h1>Financial Overview</h1>
-                <p id="dashSubtitle">Loading...</p>
-            </div>
-
-            <!-- Metric Cards -->
-            <div class="metrics-grid">
-                <div class="metric-card income">
-                    <div class="metric-label">TOTAL INCOME</div>
-                    <div class="metric-icon">↑</div>
-                    <div class="metric-value" id="m-income">—</div>
-                </div>
-                <div class="metric-card expense">
-                    <div class="metric-label">TOTAL EXPENSES</div>
-                    <div class="metric-icon">↓</div>
-                    <div class="metric-value" id="m-expenses">—</div>
-                </div>
-                <div class="metric-card balance">
-                    <div class="metric-label">NET BALANCE</div>
-                    <div class="metric-icon">◈</div>
-                    <div class="metric-value" id="m-balance">—</div>
-                </div>
-                <div class="metric-card savings">
-                    <div class="metric-label">SAVINGS RATE</div>
-                    <div class="metric-icon">◎</div>
-                    <div class="metric-value" id="m-savings">—</div>
-                </div>
-            </div>
-
-            <!-- Charts Row -->
-            <div class="two-col">
-                <!-- Category Breakdown -->
-                <div class="card">
-                    <h3 class="card-title">EXPENSE BREAKDOWN</h3>
-                    <div id="categoryChart"></div>
-                </div>
-
-                <!-- Recent Transactions -->
-                <div class="card">
-                    <h3 class="card-title">RECENT TRANSACTIONS</h3>
-                    <div id="recentList"></div>
-                </div>
-            </div>
-
-            <!-- Insight Banner -->
-            <div class="card insight-card">
-                <div class="insight-icon">✦</div>
-                <div>
-                    <div class="insight-label">INSIGHT</div>
-                    <p id="insightText" class="insight-text">Loading financial insights...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== TRANSACTIONS TAB ===== -->
+     <!-- ===== TRANSACTIONS TAB ===== -->
         <section id="tab-transactions" class="tab-content">
             <div class="page-header-row">
                 <div class="page-title">
@@ -139,8 +83,14 @@
             </div>
         </section>
 
-    </main>
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="footer">
+    <p>© 2026 Finwing · Financial Intelligence Platform · All rights reserved.</p>
+</footer>
 
-   
+
+    <script src="/js/theme.js"></script>
 </body>
 </html>
