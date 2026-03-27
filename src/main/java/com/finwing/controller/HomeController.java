@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class HomeController {
   
@@ -20,8 +22,11 @@ public String login(Model model) {
     model.addAttribute("msg", "Welcome");
     return "login";
 }
-@GetMapping("/Dashboard")
-public String Dashboard(Model model){
+@GetMapping("/dashboard")
+public String Dashboard(HttpSession session,Model model){
+     if (session.getAttribute("loggedInUser") == null) {
+            return "redirect:/login";
+        }
     model.addAttribute("msg","dashboard");
     return "Dashboard";
 }
@@ -30,9 +35,9 @@ public String transaction(Model model){
     model.addAttribute("msg","transaction");
     return "transaction";
 }
-@GetMapping("/registrationform")
+@GetMapping("/registration")
 public String showRegisterPage() {
-    return "registrationform"; 
+    return "registration"; 
 }
 
 
