@@ -8,7 +8,8 @@
      <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
-     <header class="header">
+    <!-- user is not login -->
+     <header class="header" th:if="${session.user == null}">
         <div th:fragment="header" class="header-inner">
             <div class="logo">
                 <div class="logo-icon">₹</div>
@@ -18,15 +19,42 @@
                 </div>
             </div>
             <nav class="nav">
-                <button class="tab-btn active" data-tab="dashboard">Home</button>
-                <button class="tab-btn" data-tab="transactions"><a href="/transaction">transaction</a></button>
-                <button class="tab-btn">
-                <a href="/login" style="text-decoration: none; color: inherit;">Login</a>
-                 </button>
-               <button class="tab-btn" data-tab="transactions"  onclick="window.location.href='/register'">Sign up</button>
+                <button class="tab-btn active" data-tab="dashboard"  onclick="window.location.href='/'">Home</button>
+                <button class="tab-btn" data-tab="transactions"  onclick="window.location.href='/transaction'">transaction</button>
+                <button class="tab-btn"  onclick="window.location.href='/login'">login</button>
+               <button class="tab-btn" data-tab="transactions"  onclick="window.location.href='/registration'">Sign up</button>
                 
                   
-                 <button class="tab-btn" onclick="toggleTheme()">Theme</button>
+                 <!-- <button class="tab-btn" onclick="toggleTheme()">Theme</button> -->
+
+   
+            </nav>
+            <div class="status-dot">
+                <div class="dot"></div>
+                <span id="monthLabel">March 2026</span>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- user is login  -->
+    <header class="header" th:if="${session.user != null}">
+        <div th:fragment="header" class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">₹</div>
+                <div>
+                    <div class="logo-name">Finwing</div>
+                    <div class="logo-sub">FINANCE MANAGER</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="tab-btn active" data-tab="dashboard"  onclick="window.location.href='/'">Home</button>
+                <button class="tab-btn" data-tab="transactions"  onclick="window.location.href='/transaction'">transaction</button>
+                <button class="tab-btn"  onclick="window.location.href='/login'">login</button>
+               <button class="tab-btn" data-tab="transactions"  onclick="window.location.href='/registration'">Sign up</button>
+                
+                  
+                 <!-- <button class="tab-btn" onclick="toggleTheme()">Theme</button> -->
 
    
             </nav>

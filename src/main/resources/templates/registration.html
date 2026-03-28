@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register</title>
+   <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/homestyle.css}">
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -105,23 +107,7 @@
   </style>
 </head>
 <body>
-
-<nav>
-  <div class="brand">
-    <div class="brand-icon">₹</div>
-    <div class="brand-text">
-      <span>FINWING</span>
-      <small>Financial Intelligence Platform</small>
-    </div>
-  </div>
-  <div class="nav-links">
-    <a href="#">Dashboard</a>
-    <button class="btn-nav">Login</button>
-    <a href="#">AI Advisor</a>
-    <span class="nav-date">March 2026</span>
-  </div>
-</nav>
-
+<div th:replace="navbar :: header"></div>
 <main>
   <div class="card">
 
@@ -245,11 +231,13 @@
     </div> -->
 
     <div class="card-foot">
-      Already have an account? <a href="#">Sign In</a>
+      Already have an account? <a href="/login">Sign In</a>
     </div>
 
   </div>
 </main>
+<div th:replace="footer :: footer"></div>
+
 
 <script>
   function togglePwd(id, btn) {
