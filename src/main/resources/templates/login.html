@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>finwing login</title>
+     <link rel="stylesheet" th:href="@{/css/style.css}">
+      <link rel="stylesheet" th:href="@{/css/homestyle.css}">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -195,21 +197,7 @@
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="nav-icon">₹</div>
-    <div>
-        <span class="nav-brand-name">FINWING</span>
-        <span class="nav-brand-sub">Financial Intelligence Platform</span>
-    </div>
-    <div class="nav-links">
-        <a href="#" class="nav-link">Dashboard</a>
-        <a href="#" class="nav-link active">Login</a>
-        <a href="#" class="nav-link">AI Advisor</a>
-    </div>
-    <div class="nav-dot">
-        <span class="nav-dot-circle"></span> March 2026
-    </div>
-</nav>
+<div th:replace="navbar :: header"></div>
 
 <div class="main">
     <div class="card">
@@ -277,7 +265,7 @@
         </div>
     </div>
 </div>
-
+<div th:replace="footer :: footer"></div>
 <script>
     function togglePass() {
         const passInput = document.getElementById('password');
