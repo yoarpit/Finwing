@@ -3,21 +3,24 @@ package com.finwing.controller;
 import com.finwing.dto.UserRegistrationDto;
 import com.finwing.entity.User;
 import com.finwing.repository.UserRepository;
-
 import jakarta.servlet.http.HttpSession;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 @Controller
 public class Authentication {
 
     @Autowired
     private UserRepository userRepository;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
 
     // 1. Show the Registration Page
     @GetMapping("/register")
@@ -28,10 +31,19 @@ public class Authentication {
 
     // 2. Handle the Form Submission
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") UserRegistrationDto registrationDto) {
+    public String registerUser(@ModelAttribute("user") UserRegistrationDto registrationDto, Model model) {
         User user = new User();
+         if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            model.addAttribute("error", "Email already exists");
+            return "register";
+        }
+         if (userRepository.existsByUsername(registrationDto.getUserName())) {
+            model.addAttribute("error", "Username already exists");
+            return "register";
+        }
+
         user.setEmail(registrationDto.getEmail());
-        user.setPassword(registrationDto.getPassword()); // Note: Always hash passwords in production!
+        user.setPassword(encoder.encode(registrationDto.getPassword()));
         user.setFullName(registrationDto.getFullName());
         user.setCurrency(registrationDto.getCurrency());
         user.setUsername(registrationDto.getUserName());
