@@ -62,23 +62,32 @@ public class Authentication {
                             @RequestParam String password, 
                             HttpSession session, 
                             Model model) {
-        
-        Optional<User> user = userRepository.findByEmail(email);
 
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-            // Store user in session to keep them "logged in"
-            session.setAttribute("loggedInUser", user.get());
-            return "redirect:/dashboard";
-        } else {
+        Optional<User> optionaluser = userRepository.findByEmail(email);
+
+        if (optionaluser.isPresent()) {
+          User user = optionaluser.get();
+
+            if (encoder.matches(password, user.getPassword())) {
+
+                
+                session.setAttribute("userId", user.getUserId());
+                session.setAttribute("username", user.getUsername());
+                session.setAttribute("user", user);
+                return "redirect:/dashboard";
+            }
+
+        }
+         
             model.addAttribute("error", "Invalid email or password");
             return "login";
-        }
+        
     }
 
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-    session.invalidate(); // destroy session
-    return "redirect:/login?logout";
+        session.invalidate(); // destroy session
+        return "redirect:/login?logout";
  }
 }

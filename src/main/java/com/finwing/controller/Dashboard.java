@@ -18,10 +18,12 @@ public class Dashboard {
 
     @GetMapping("/dashboard")
     public String ShowDashbord(HttpSession session,Model model){
-          model.addAttribute("transaction", new TransactionDto());
-          return "dashboard";
-    } 
-
+        if (session.getAttribute("userId") == null) {
+            return "redirect:/login";}
+        model.addAttribute("transaction", new TransactionDto());
+        return "dashboard";
+    
+}
     
 
 }
