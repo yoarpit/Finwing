@@ -22,14 +22,14 @@ public String login(Model model) {
     model.addAttribute("msg", "Welcome");
     return "login";
 }
-@GetMapping("/dashboard")
-public String Dashboard(HttpSession session,Model model){
-     if (session.getAttribute("loggedInUser") == null) {
-            return "redirect:/login";
-        }
-    model.addAttribute("msg","dashboard");
-    return "Dashboard";
-}
+// @GetMapping("/dashboard")
+// public String Dashboard(HttpSession session,Model model){
+//      if (session.getAttribute("loggedInUser") == null) {
+//             return "redirect:/login";
+//         }
+//     model.addAttribute("msg","dashboard");
+//     return "Dashboard";
+// }
 @GetMapping("/transaction")
 public String transaction(Model model){
     model.addAttribute("msg","transaction");
