@@ -118,25 +118,25 @@
     </div>
 
     <div class="card-body">
-      <form id="regForm" novalidate>
+      <form id="regForm" th:action="@{/register}" method="post" >
 
         <!-- Name -->
-        <div class="row">
+        <!-- <div class="row"> -->
           <div class="field">
-            <label>First Name</label>
+            <label>Username</label>
             <div class="input-wrap">
               <input type="text" id="fname" placeholder="Rahul" autocomplete="given-name"/>
             </div>
-            <div class="err-msg" id="fname-err">Enter your first name</div>
+            <div class="err-msg" id="fname-err">Enter your User name</div>
           </div>
           <div class="field">
-            <label>Last Name</label>
+            <label>Full Name</label>
             <div class="input-wrap">
               <input type="text" id="lname" placeholder="Sharma" autocomplete="family-name"/>
             </div>
             <div class="err-msg" id="lname-err">Enter your last name</div>
           </div>
-        </div>
+        <!-- </div> -->
 
         <!-- Email -->
         <div class="field">
@@ -269,7 +269,6 @@
   function markErr(id, bad)  { const el = document.getElementById(id); if (el) bad ? el.classList.add('err') : el.classList.remove('err'); }
 
   document.getElementById('regForm').addEventListener('submit', function(e) {
-    e.preventDefault();
     let ok = true;
 
     const fname  = document.getElementById('fname').value.trim();
