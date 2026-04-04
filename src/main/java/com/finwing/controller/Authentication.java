@@ -23,23 +23,23 @@ public class Authentication {
 
 
     // 1. Show the Registration Page
-    @GetMapping("/register")
+    @GetMapping("/registration")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new UserRegistrationDto());
-        return "register"; // looks for register.html in templates
+        return "registration"; // looks for register.html in templates
     }
 
     // 2. Handle the Form Submission
-    @PostMapping("/register")
+    @PostMapping("/registration")
     public String registerUser(@ModelAttribute("user") UserRegistrationDto registrationDto, Model model) {
         User user = new User();
          if (userRepository.existsByEmail(registrationDto.getEmail())) {
             model.addAttribute("error", "Email already exists");
-            return "register";
+            return "registration";
         }
          if (userRepository.existsByUsername(registrationDto.getUserName())) {
             model.addAttribute("error", "Username already exists");
-            return "register";
+            return "registration";
         }
 
         user.setEmail(registrationDto.getEmail());
@@ -54,7 +54,7 @@ public class Authentication {
         user.setUpdatedAt(registrationDto.getUpdate_at());
         
         userRepository.save(user); // Hibernate saves this to Postgres
-        return "redirect:/register?success";
+        return "redirect:/login";
     }
 
     @PostMapping("/login")
@@ -83,7 +83,7 @@ public class Authentication {
             return "login";
         
     }
-
+   
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
