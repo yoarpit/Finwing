@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
-@RestController
+@Controller
 public class Authentication {
 
     @Autowired
@@ -51,7 +51,7 @@ public class Authentication {
         user.setMobileNo(registrationDto.getMobile_no());
         user.setIsActive(registrationDto.getIs_active());
         user.setCreatedAt(registrationDto.getCreated_at());
-        user.setUpdatedAt(registrationDto.getUpdate_it());
+        user.setUpdatedAt(registrationDto.getUpdate_at());
         
         userRepository.save(user); // Hibernate saves this to Postgres
         return "redirect:/register?success";

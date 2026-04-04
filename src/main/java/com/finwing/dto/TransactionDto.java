@@ -9,4 +9,5 @@ public class TransactionDto {
     private String type;       
     private String category;
     private String description;
+    
 }
