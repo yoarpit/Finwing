@@ -24,6 +24,6 @@ public class UserRegistrationDto {
     private java.time.LocalDateTime created_at;
 
    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-   private java.time.LocalDateTime update_it;
+   private java.time.LocalDateTime update_at;
 
 }

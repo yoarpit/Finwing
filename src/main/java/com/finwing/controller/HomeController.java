@@ -30,15 +30,15 @@ public String login(Model model) {
 //     model.addAttribute("msg","dashboard");
 //     return "Dashboard";
 // }
-@GetMapping("/transaction")
-public String transaction(Model model){
-    model.addAttribute("msg","transaction");
-    return "transaction";
-}
-@GetMapping("/registration")
-public String showRegisterPage() {
-    return "registration"; 
-}
+// @GetMapping("/transaction")
+// public String transaction(Model model){
+//     model.addAttribute("msg","transaction");
+//     return "transaction";
+// }
+// @GetMapping("/registration")
+// public String showRegisterPage() {
+//     return "registration"; 
+// }
 
 
     
