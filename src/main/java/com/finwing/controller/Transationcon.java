@@ -18,7 +18,7 @@ import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 
 
-@RestController
+@Controller
 public class Transationcon {
    @Autowired 
    TransactionRepository transactionrepository;
