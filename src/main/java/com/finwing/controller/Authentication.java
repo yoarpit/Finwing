@@ -34,7 +34,7 @@ public class Authentication {
     public String registerUser(@ModelAttribute("user") UserRegistrationDto registrationDto, Model model) {
         User user = new User();
          if (userRepository.existsByEmail(registrationDto.getEmail())) {
-            model.addAttribute("error", "Email already exists");
+                
             return "registration";
         }
          if (userRepository.existsByUsername(registrationDto.getUserName())) {
