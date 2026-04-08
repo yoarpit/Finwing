@@ -1,81 +1,111 @@
+```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${appName}">Finwing</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-     <script th:src="@{/js/script.js}"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+    <!-- Font (optional but makes UI better) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- JS -->
+    <script defer th:src="@{/js/script.js}"></script>
 </head>
+
 <body>
+
+    <!-- Navbar -->
     <div th:replace="navbar :: header"></div>
-   
 
-    <!-- MAIN CONTENT -->
-   
-    
-     <main class="main" th:fragment="dashboard">
+    <!-- MAIN DASHBOARD -->
+    <main class="main" th:fragment="dashboard">
 
-        <!-- ===== DASHBOARD TAB ===== -->
         <section id="tab-dashboard" class="tab-content active">
-            <div class="page-title">
+
+            <!-- HEADER -->
+            <div class="page-header">
                 <h1>Financial Overview</h1>
-                <p id="dashSubtitle">Loading...</p>
+                <p id="dashSubtitle">Welcome back 👋</p>
             </div>
 
-            <!-- Metric Cards -->
+            <!-- METRICS -->
             <div class="metrics-grid">
+
                 <div class="metric-card income">
-                    <div class="metric-label">TOTAL INCOME</div>
-                    <div class="metric-icon">↑</div>
-                    <div class="metric-value" id="m-income">—</div>
+                    <span class="metric-label">Total Income</span>
+                    <span class="metric-icon">↑</span>
+                    <h2 class="metric-value" id="m-income">₹0</h2>
                 </div>
+
                 <div class="metric-card expense">
-                    <div class="metric-label">TOTAL EXPENSES</div>
-                    <div class="metric-icon">↓</div>
-                    <div class="metric-value" id="m-expenses">—</div>
+                    <span class="metric-label">Total Expenses</span>
+                    <span class="metric-icon">↓</span>
+                    <h2 class="metric-value" id="m-expenses">₹0</h2>
                 </div>
+
                 <div class="metric-card balance">
-                    <div class="metric-label">NET BALANCE</div>
-                    <div class="metric-icon">◈</div>
-                    <div class="metric-value" id="m-balance">—</div>
+                    <span class="metric-label">Net Balance</span>
+                    <span class="metric-icon">◈</span>
+                    <h2 class="metric-value" id="m-balance">₹0</h2>
                 </div>
+
                 <div class="metric-card savings">
-                    <div class="metric-label">SAVINGS RATE</div>
-                    <div class="metric-icon">◎</div>
-                    <div class="metric-value" id="m-savings">—</div>
+                    <span class="metric-label">Savings Rate</span>
+                    <span class="metric-icon">◎</span>
+                    <h2 class="metric-value" id="m-savings">0%</h2>
                 </div>
+
             </div>
 
-            <!-- Charts Row -->
+            <!-- CHARTS + TRANSACTIONS -->
             <div class="two-col">
-                <!-- Category Breakdown -->
+
+                <!-- Expense Chart -->
                 <div class="card">
-                    <h3 class="card-title">EXPENSE BREAKDOWN</h3>
-                    <div id="categoryChart"></div>
+                    <h3 class="card-title">Expense Breakdown</h3>
+                    <div id="categoryChart">
+                        <!-- Chart.js will render here -->
+                    </div>
                 </div>
 
                 <!-- Recent Transactions -->
                 <div class="card">
-                    <h3 class="card-title">RECENT TRANSACTIONS</h3>
-                    <div id="recentList"></div>
+                    <h3 class="card-title">Recent Transactions</h3>
+
+                    <div id="recentList">
+                        <!-- Example static UI (replace with Thymeleaf loop later) -->
+                        <div class="transaction-item">
+                            <span>Food</span>
+                            <span class="expense">-₹250</span>
+                        </div>
+                        <div class="transaction-item">
+                            <span>Salary</span>
+                            <span class="income">+₹25,000</span>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
-            <!-- Insight Banner -->
+            <!-- INSIGHT -->
             <div class="card insight-card">
                 <div class="insight-icon">✦</div>
                 <div>
-                    <div class="insight-label">INSIGHT</div>
-                    <p id="insightText" class="insight-text">Loading financial insights...</p>
+                    <strong>Insight</strong>
+                    <p id="insightText">
+                        You spent more on food this week. Try reducing eating out.
+                    </p>
                 </div>
             </div>
-        </section>
 
-       
+        </section>
 
     </main>
 
-   
 </body>
 </html>
+```

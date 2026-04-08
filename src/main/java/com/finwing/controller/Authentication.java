@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
-@RestController
+@Controller
 public class Authentication {
 
     @Autowired
