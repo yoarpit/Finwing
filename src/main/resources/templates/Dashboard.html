@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,7 +8,9 @@
 
     <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+ 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font (optional but makes UI better) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -101,11 +103,37 @@
                     </p>
                 </div>
             </div>
-
+<div style="width: 50%; max-width: 400px; padding: 50px;">
+    <canvas id="expenseChart"></canvas>
+</div>
         </section>
 
     </main>
 
+    <script>
+const ctx = document.getElementById('expenseChart');
+
+new Chart(ctx, {
+    type: 'doughnut',  // can change to 'bar' or 'line'
+    data: {
+        labels: ['Food', 'Rent', 'Transport', 'Shopping', 'Other'],
+        datasets: [{
+            label: 'Expenses',
+            data: [3000, 8000, 2000, 1500, 1000],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    color: "#ffffff"
+                }
+            }
+        }
+    }
+});
+</script>
 </body>
 </html>
-```
