@@ -16,7 +16,7 @@ public class UserRegistrationDto {
     private String fullName;
     private String email;
     private String password;
-    private String mobile_no;
+    private String mobileNo;
     private String gender;
     private String currency;
     private Boolean is_active;

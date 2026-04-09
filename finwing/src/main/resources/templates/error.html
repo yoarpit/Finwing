@@ -1,11 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error</title>
+    <meta charset="UTF-8"/>
+    <title>Finwing · Error</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:#0c0c0c;color:#e8e8e8;font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+        .wrap{max-width:400px}
+        .code{font-size:5rem;font-weight:700;color:#d4a017;font-family:monospace;line-height:1}
+        h1{font-size:1.4rem;margin:1rem 0 .5rem}
+        p{color:#666;margin-bottom:1.5rem}
+        a{color:#d4a017;text-decoration:none;border:1px solid #d4a01740;border-radius:8px;padding:.5rem 1.3rem;display:inline-block;transition:all .2s}
+        a:hover{background:#d4a01720}
+    </style>
 </head>
 <body>
-    
+<div class="wrap">
+    <div class="code" th:text="${status}">500</div>
+    <h1 th:text="${error}">Something went wrong</h1>
+    <p th:text="${message}">An unexpected error occurred.</p>
+    <a href="/">← Back to Home</a>
+</div>
 </body>
 </html>

@@ -12,7 +12,60 @@
 
     <link rel="stylesheet" th:href="@{/css/theme.css}">
 
-
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0c0c0c;--surface:#151515;--border:#222;--gold:#d4a017;--gold2:#f0c040;--text:#e8e8e8;--muted:#666;--green:#2ecc71;--radius:12px}
+        body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+        /* NAV */
+        nav{height:60px;background:rgba(12,12,12,.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+        .nav-left{display:flex;align-items:center;gap:.75rem}
+        .nav-icon{width:36px;height:36px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:.95rem;color:#000}
+        .nav-brand{font-weight:700;font-size:1.05rem;letter-spacing:.01em}
+        .nav-right{display:flex;gap:.75rem;align-items:center}
+        .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.45rem 1.1rem;font-size:.875rem;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all .2s}
+        .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+        .btn-cta{background:var(--gold);color:#000;border:none;border-radius:8px;padding:.5rem 1.3rem;font-size:.875rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:background .2s}
+        .btn-cta:hover{background:#e8b020}
+        /* HERO */
+        .hero{max-width:900px;margin:0 auto;padding:6rem 2rem 4rem;text-align:center}
+        .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:#d4a01720;border:1px solid #d4a01740;color:var(--gold);border-radius:99px;padding:.35rem 1rem;font-size:.75rem;font-family:'Space Mono',monospace;letter-spacing:.08em;margin-bottom:1.5rem}
+        .hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1.2rem}
+        .hero h1 span{color:var(--gold)}
+        .hero p{font-size:1.1rem;color:var(--muted);line-height:1.65;max-width:600px;margin:0 auto 2.5rem}
+        .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .btn-hero{border-radius:10px;padding:.75rem 2rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all .2s;display:inline-block}
+        .btn-hero.primary{background:var(--gold);color:#000}
+        .btn-hero.primary:hover{background:#e8b020;transform:translateY(-1px)}
+        .btn-hero.secondary{background:transparent;color:var(--text);border:1px solid #444}
+        .btn-hero.secondary:hover{border-color:var(--gold);color:var(--gold)}
+        /* FEATURES */
+        .features{max-width:1100px;margin:4rem auto;padding:0 2rem}
+        .features-title{text-align:center;margin-bottom:3rem}
+        .features-title h2{font-size:1.8rem;font-weight:600;letter-spacing:-.02em;margin-bottom:.5rem}
+        .features-title p{color:var(--muted)}
+        .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+        @media(max-width:750px){.features-grid{grid-template-columns:1fr}}
+        .feat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:border-color .2s}
+        .feat-card:hover{border-color:#444}
+        .feat-icon{font-size:1.8rem;margin-bottom:1rem}
+        .feat-card h3{font-size:1rem;font-weight:600;margin-bottom:.5rem}
+        .feat-card p{font-size:.875rem;color:var(--muted);line-height:1.55}
+        /* DASHBOARD PREVIEW */
+        .preview{max-width:1100px;margin:3rem auto 5rem;padding:0 2rem;text-align:center}
+        .preview h2{font-size:1.6rem;font-weight:600;margin-bottom:2rem}
+        .preview-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;padding:2rem}
+        .mini-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem}
+        @media(max-width:600px){.mini-metrics{grid-template-columns:1fr 1fr}}
+        .mini-card{background:#0f0f0f;border:1px solid #252525;border-radius:8px;padding:1rem;text-align:left}
+        .mini-label{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:.35rem}
+        .mini-val{font-size:1.1rem;font-weight:600}
+        .mini-val.g{color:#2ecc71}.mini-val.r{color:#e74c3c}.mini-val.gold{color:var(--gold)}.mini-val.b{color:#3498db}
+        /* FOOTER */
+        footer{border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:.8rem}
+    </style>
      <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
@@ -64,6 +117,69 @@
             </div>
             <a href="#" class="tab-btn active" data-tab="dashboard">View Details</a>
         </div>
+    </div>
+</section>
+<section class="features">
+    <div class="features-title">
+        <h2>Everything you need</h2>
+        <p>A complete personal finance platform built for India</p>
+    </div>
+    <div class="features-grid">
+        <div class="feat-card">
+            <div class="feat-icon">🤖</div>
+            <h3>AI Auto-Categorisation</h3>
+            <p>XGBoost classifier automatically tags every transaction — Food, Housing, Transport, Health and more.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">📊</div>
+            <h3>Live Dashboard</h3>
+            <p>See total income, expenses, net balance and savings rate at a glance with expense breakdowns.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">📥</div>
+            <h3>CSV Import</h3>
+            <p>Upload your bank statement CSV and all transactions are imported and classified automatically.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">🔐</div>
+            <h3>Secure Auth</h3>
+            <p>BCrypt-hashed passwords, session management, and separate admin and user portals.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">🛡️</div>
+            <h3>Admin Panel</h3>
+            <p>Admins can view all users, manage accounts, and monitor the full transaction ledger.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">🗄️</div>
+            <h3>PostgreSQL + Hibernate</h3>
+            <p>Enterprise-grade data storage with JPA/Hibernate ORM — no data ever lost.</p>
+        </div>
+    </div>
+</section>
+
+<section class="preview">
+    <h2>Dashboard Preview</h2>
+    <div class="preview-box">
+        <div class="mini-metrics">
+            <div class="mini-card">
+                <div class="mini-label">Total Income</div>
+                <div class="mini-val g">₹1,00,000</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Total Expenses</div>
+                <div class="mini-val r">₹43,099</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Net Balance</div>
+                <div class="mini-val gold">₹56,901</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Savings Rate</div>
+                <div class="mini-val b">56.9%</div>
+            </div>
+        </div>
+        <p style="color:var(--muted);font-size:.85rem">Your real numbers replace these once you add transactions.</p>
     </div>
 </section>
 

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Finwing · Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0a0a0a;--surface:#141414;--surface2:#0e0e0e;--border:#222;--border2:#2e2e2e;--red:#e63946;--gold:#d4a017;--text:#e8e8e8;--muted:#666;--green:#2ecc71;--radius:10px}
+        body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+        .navbar{height:56px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem}
+        .nav-left{display:flex;align-items:center;gap:.75rem}
+        .nav-icon{width:32px;height:32px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:11px;color:#fff}
+        .nav-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600}
+        .nav-badge{background:#e6394620;color:var(--red);border:1px solid #e6394640;border-radius:4px;font-size:.65rem;padding:.1rem .5rem;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em}
+        .btn-logout{background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:6px;padding:.35rem .9rem;font-size:.8rem;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;transition:all .2s}
+        .btn-logout:hover{border-color:var(--red);color:var(--red)}
+        main{max-width:1400px;margin:0 auto;padding:2rem}
+        h1{font-size:1.6rem;font-weight:600;margin-bottom:.25rem}
+        .subtitle{color:var(--muted);font-size:.875rem;margin-bottom:1.5rem}
+        /* STATS */
+        .stats-row{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+        .stat-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1.2rem 1.5rem;flex:1;min-width:150px}
+        .stat-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:.4rem}
+        .stat-value{font-size:1.6rem;font-weight:600}
+        .stat-value.red{color:var(--red)}
+        .stat-value.gold{color:var(--gold)}
+        /* SECTIONS */
+        .section-title{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border2)}
+        .card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
+        /* TABLE */
+        table{width:100%;border-collapse:collapse;font-size:.85rem}
+        th{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;text-align:left;padding:.7rem 1rem;border-bottom:1px solid var(--border2);white-space:nowrap}
+        td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}
+        tr:last-child td{border-bottom:none}
+        tr:hover td{background:#ffffff04}
+        .badge{display:inline-block;padding:.15rem .55rem;border-radius:99px;font-size:.68rem;font-family:'IBM Plex Mono',monospace}
+        .badge-active{background:#2ecc7120;color:#2ecc71;border:1px solid #2ecc7140}
+        .badge-income{background:#2ecc7120;color:#2ecc71;border:1px solid #2ecc7140}
+        .badge-expense{background:#e6394620;color:#e63946;border:1px solid #e6394640}
+        .btn-del{color:#e63946;background:none;border:1px solid #e6394640;border-radius:4px;padding:.2rem .6rem;font-size:.75rem;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;transition:all .2s}
+        .btn-del:hover{background:#e6394620}
+        .alert{padding:.75rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem}
+        .alert-success{background:#2ecc7120;border:1px solid #2ecc7150;color:#7eedc0}
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <div class="nav-icon">ADM</div>
+        <span class="nav-brand">Finwing</span>
+        <span class="nav-badge">ADMIN</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-size:.85rem;color:var(--muted)">
+            Logged in as <span th:text="${adminName}" style="color:var(--text)">Admin</span>
+        </span>
+        <a th:href="@{/admin/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<main>
+    <h1>Admin Dashboard</h1>
+    <p class="subtitle">Manage all users and transactions</p>
+
+    <div th:if="${param.deleted}" class="alert alert-success">User deleted successfully.</div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value gold" th:text="${userCount}">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Transactions</div>
+            <div class="stat-value" th:text="${txCount}">0</div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card">
+        <div class="section-title">All Users</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Currency</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(allUsers)}">
+                    <td colspan="9" style="text-align:center;color:var(--muted);padding:2rem">No users registered yet.</td>
+                </tr>
+                <tr th:each="u, stat : ${allUsers}">
+                    <td th:text="${stat.index + 1}" style="color:var(--muted)">1</td>
+                    <td th:text="${u.fullName}">Name</td>
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:.8rem" th:text="'@' + ${u.username}">@user</td>
+                    <td th:text="${u.email}" style="color:var(--muted)">email</td>
+                    <td th:text="${u.mobileNo}" style="color:var(--muted)">mobile</td>
+                    <td th:text="${u.currency}">INR</td>
+                    <td><span class="badge badge-active" th:if="${u.isActive}">Active</span></td>
+                    <td th:text="${#temporals.format(u.createdAt, 'dd MMM yyyy')}" style="color:var(--muted);font-size:.8rem">Date</td>
+                    <td>
+                        <a th:href="@{/admin/deleteUser/{id}(id=${u.userId})}"
+                           class="btn-del"
+                           onclick="return confirm('Delete this user and all their data?')">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="card">
+        <div class="section-title">All Transactions</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>AI Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(allTransactions)}">
+                    <td colspan="8" style="text-align:center;color:var(--muted);padding:2rem">No transactions yet.</td>
+                </tr>
+                <tr th:each="tx, stat : ${allTransactions}">
+                    <td th:text="${stat.index + 1}" style="color:var(--muted)">1</td>
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:.8rem"
+                        th:text="${tx.user.username}">user</td>
+                    <td th:text="${tx.description}">Desc</td>
+                    <td th:text="${tx.category}" style="color:var(--muted)">Cat</td>
+                    <td th:text="${#temporals.format(tx.date, 'dd MMM yyyy')}" style="color:var(--muted);font-size:.8rem">Date</td>
+                    <td><span class="badge"
+                              th:classappend="${tx.type == 'income'} ? 'badge-income' : 'badge-expense'"
+                              th:text="${tx.type}">type</span></td>
+                    <td th:text="'₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')}"
+                        th:style="${tx.type == 'income'} ? 'color:#2ecc71;font-weight:600' : 'color:#e63946;font-weight:600'">₹0</td>
+                    <td th:text="${tx.aiCategory != null ? tx.aiCategory : '-'}"
+                        style="color:var(--gold);font-size:.8rem">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>

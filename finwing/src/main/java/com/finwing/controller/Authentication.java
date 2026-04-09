@@ -48,7 +48,7 @@ public class Authentication {
         user.setCurrency(registrationDto.getCurrency());
         user.setUsername(registrationDto.getUserName());
         user.setGender(registrationDto.getGender());
-        user.setMobileNo(registrationDto.getMobile_no());
+        user.setMobileNo(registrationDto.getMobileNo());
         user.setIsActive(registrationDto.getIs_active());
         user.setCreatedAt(registrationDto.getCreated_at());
         user.setUpdatedAt(registrationDto.getUpdate_at());

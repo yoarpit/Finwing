@@ -38,6 +38,10 @@ public class AdminController {
         model.addAttribute("msg", new AdminRegistractionDto());
         return "adminRegistration";
     }
+    @GetMapping("/admin-login")
+public String adminLogin() {
+    return "Admin/admin-login"; // templates/Admin/admin-login.html
+}
 
     @PostMapping("/adminRegister")
     public String registerAdmin(@ModelAttribute("admin") AdminRegistractionDto adminregistrationDto, Model model) {
