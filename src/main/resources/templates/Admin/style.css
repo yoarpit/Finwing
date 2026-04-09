@@ -1,0 +1,111 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #121212; /* Dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #ffffff;
+}
+
+/* Login Card */
+.login-box {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 12px;
+    width: 120%;
+    max-width: 650px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Header/Logo */
+header h1 {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+}
+
+header h1 span {
+    color: #ff6b35; /* FinWing Orange */
+}
+
+header p {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+/* Inputs */
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+}
+
+/* Links and Checkbox */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+}
+
+.forgot-link {
+    color: #ff6b35;
+    text-decoration: none;
+}
+
+.remember-me {
+    color: #aaa;
+    cursor: pointer;
+}
+
+/* Button */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(to right, #ff8c00, #ff6b35);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.login-btn:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+/* Footer */
+footer p {
+    margin-top: 20px;
+    font-size: 0.7rem;
+    color: #555;
+}
