@@ -18,8 +18,8 @@ import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 
 
-@RestController
-public class Transationcon {
+@Controller
+public class Transactioncon {
    @Autowired 
    TransactionRepository transactionrepository;
 
@@ -33,6 +33,7 @@ public String showTransaction(Model model,HttpSession session){
       List<Transaction> transactions = transactionrepository.findByUser(user);
 
       model.addAttribute("transactions", transactions);
+      model.addAttribute("newTx", new Transaction());
 
       return "transaction";       
  
@@ -60,7 +61,7 @@ public String makeTransaction( @RequestParam Double amount,
         transaction.setUser(user);
         transactionrepository.save(transaction);
         
-        return "redirect:/transacion";
+        return "redirect:/transaction";
    
 }
 

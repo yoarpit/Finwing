@@ -64,34 +64,56 @@
             </div>
 
             <!-- CHARTS + TRANSACTIONS -->
-            <div class="two-col">
-
-                <!-- Expense Chart -->
-                <div class="card">
-                    <h3 class="card-title">Expense Breakdown</h3>
-                    <div id="categoryChart">
-                        <!-- Chart.js will render here -->
-                    </div>
-                </div>
-
-                <!-- Recent Transactions -->
-                <div class="card">
-                    <h3 class="card-title">Recent Transactions</h3>
-
-                    <div id="recentList">
-                        <!-- Example static UI (replace with Thymeleaf loop later) -->
-                        <div class="transaction-item">
-                            <span>Food</span>
-                            <span class="expense">-₹250</span>
-                        </div>
-                        <div class="transaction-item">
-                            <span>Salary</span>
-                            <span class="income">+₹25,000</span>
-                        </div>
-                    </div>
-                </div>
-
+             <div class="two-col">
+        <!-- Expense Breakdown -->
+        <div class="card">
+            <div class="card-title">Expense Breakdown</div>
+            <div th:if="${#maps.isEmpty(categoryBreakdown)}" class="empty-state">
+                <p>No expense data yet.</p>
+                <a th:href="@{/transaction}">Add transactions →</a>
             </div>
+            <div th:unless="${#maps.isEmpty(categoryBreakdown)}">
+                <div th:each="entry : ${categoryBreakdown}" class="cat-row">
+                    <span class="cat-label" th:text="${entry.key}">Category</span>
+                    <div class="cat-bar-wrap">
+                        <div class="cat-bar"
+                             th:style="'width:' + (${totalExpense} > 0 ? ${#numbers.formatDecimal(entry.value / totalExpense * 100, 1, 0)} : 0) + '%;background:var(--gold)'">
+                        </div>
+                    </div>
+                    <span class="cat-amount" th:text="'₹' + ${#numbers.formatDecimal(entry.value, 1, 'COMMA', 0, 'POINT')}">₹0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card">
+            <div class="card-title">Recent Transactions</div>
+            <div th:if="${#lists.isEmpty(recentTransactions)}" class="empty-state">
+                <p>No transactions yet.</p>
+                <a th:href="@{/transaction}">Add your first →</a>
+            </div>
+            <div th:each="tx : ${recentTransactions}" class="tx-item">
+                <div class="tx-left">
+                    <div class="tx-dot"
+                         th:style="'background:' + (${tx.type == 'income'} ? '#2ecc71' : '#e74c3c')"></div>
+                    <div>
+                        <div class="tx-desc" th:text="${tx.description}">Desc</div>
+                        <div class="tx-cat" th:text="${tx.category}">Category</div>
+                    </div>
+                </div>
+                <div class="tx-amount"
+                     th:classappend="${tx.type == 'income'} ? 'income' : 'expense'"
+                     th:text="${tx.type == 'income'} ? ('+₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')}) : ('-₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')})">
+                    ₹0
+                </div>
+            </div>
+            <div style="margin-top:1rem;text-align:right">
+                <a th:href="@{/transaction}" style="color:var(--gold);font-size:.8rem;text-decoration:none">
+                    View all <span th:text="${totalCount}">0</span> transactions →
+                </a>
+            </div>
+        </div>
+    </div>
 
             <!-- INSIGHT -->
             <div class="card insight-card">

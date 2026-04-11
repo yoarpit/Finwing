@@ -1,144 +1,152 @@
 package com.finwing.controller;
 
+import com.finwing.service.TransactionService;
+import com.finwing.service.UserService;
 import java.util.Optional;
 
-import org.aspectj.weaver.BCException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.finwing.dto.AdminRegistractionDto;
-import com.finwing.dto.UserRegistrationDto;
 import com.finwing.entity.Admin;
 import com.finwing.repository.AdminRepository;
-import com.finwing.repository.UserRepository;
 
-// import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-
-@RestController
+@Controller
+@RequestMapping("/admin")
 public class AdminController {
+
+    private final TransactionService transactionService;
+    private final UserService userService;
 
     @Autowired
     private AdminRepository adminRepository;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @GetMapping("/adminRegister")
-    public String showRegistrationform(Model model){
-        model.addAttribute("msg", new AdminRegistractionDto());
-        return "adminRegistration";
+    AdminController(UserService userService, TransactionService transactionService) {
+        this.userService = userService;
+        this.transactionService = transactionService;
     }
-    @GetMapping("/admin-login")
-public String adminLogin() {
-    return "Admin/admin-login"; // templates/Admin/admin-login.html
-}
 
-    @PostMapping("/adminRegister")
-    public String registerAdmin(@ModelAttribute("admin") AdminRegistractionDto adminregistrationDto, Model model) {
+    // ─── CHECK ADMIN SESSION ──────────────────────────────────────────────────
+    private boolean isAdminLoggedIn(HttpSession session) {
+        return "ADMIN".equals(session.getAttribute("role"));
+    }
 
-        if (adminRepository.existsByEmail(adminregistrationDto.getEmail())) {
+    // ─── SHOW REGISTER FORM ───────────────────────────────────────────────────
+    @GetMapping("/adminRegister")
+    public String showRegistrationform(Model model, HttpSession session) {
+        if (isAdminLoggedIn(session)) return "redirect:/admin/admindashboard";
+        model.addAttribute("admin", new AdminRegistractionDto());
+        return "Admin/adminRegistration";  // ✅ FIXED: was "Admin/adminRegistration"
+    }
+
+    // ─── HANDLE REGISTER ──────────────────────────────────────────────────────
+    @PostMapping("/register")
+    public String registerAdmin(@ModelAttribute("admin") AdminRegistractionDto dto, Model model) {
+
+        if (adminRepository.existsByEmail(dto.getEmail())) {
             model.addAttribute("error", "Email already exists");
-            return "register";
+            model.addAttribute("admin", dto);
+            return "Admin/adminRegistration";
         }
 
-        if (adminRepository.existsByAdminName(adminregistrationDto.getAdminName())) {
+        if (adminRepository.existsByAdminName(dto.getAdminName())) {
             model.addAttribute("error", "Username already exists");
-            return "register";
+            model.addAttribute("admin", dto);
+            return "Admin/adminRegistration";
         }
 
         Admin admin = new Admin();
-        admin.setAdminName(adminregistrationDto.getAdminName());   
-        admin.setEmail(adminregistrationDto.getEmail());
-        admin.setPassword(encoder.encode(adminregistrationDto.getPassword()));
-        admin.setIsActive(adminregistrationDto.getIs_active());
-        admin.setCreatedAt(adminregistrationDto.getCreated_at());
-        admin.setUpdatedAt(adminregistrationDto.getUpdate_it());
+        admin.setAdminName(dto.getAdminName());
+        admin.setEmail(dto.getEmail());
+        admin.setPassword(encoder.encode(dto.getPassword()));
+        admin.setIsActive(dto.getIs_active());
+        admin.setCreatedAt(dto.getCreated_at());
+        admin.setUpdatedAt(dto.getUpdate_it());
 
         adminRepository.save(admin);
 
-        return "redirect:/register?success";
+        return "redirect:/admin/login?success";
     }
-    @PostMapping("/loginAdmin")
-    public String postMethodName(@RequestParam String email,
-        @RequestParam String password,HttpSession session,Model model
-    ) {
-        Optional<Admin> optionaladmin = adminRepository.findByEmail(email);
-        if (optionaladmin.isPresent()) {
-            Admin admin = optionaladmin.get();
+
+    // ─── SHOW REGISTER PAGE (GET /admin/register) ─────────────────────────────
+    @GetMapping("/register")
+    public String showRegisterPage(Model model) {
+        model.addAttribute("admin", new AdminRegistractionDto());
+        return "Admin/adminRegistration";
+    }
+
+    // ─── SHOW LOGIN ───────────────────────────────────────────────────────────
+    @GetMapping("/login")
+    public String showLoginForm(Model model, HttpSession session,
+                                @RequestParam(required = false) String success,
+                                @RequestParam(required = false) String logout) {
+        if (isAdminLoggedIn(session)) return "redirect:/admin/admindashboard";
+        if (success != null) model.addAttribute("success", "Admin account created! Please log in.");
+        if (logout != null)  model.addAttribute("success", "Logged out successfully.");
+        return "Admin/admin-login";
+    }
+
+    // ─── HANDLE LOGIN ─────────────────────────────────────────────────────────
+    @PostMapping("/login")
+    public String handleLogin(@RequestParam String email,
+                              @RequestParam String password,
+                              HttpSession session,
+                              Model model) {
+
+        Optional<Admin> optionalAdmin = adminRepository.findByEmail(email);
+
+        if (optionalAdmin.isPresent()) {
+            Admin admin = optionalAdmin.get();
             if (encoder.matches(password, admin.getPassword())) {
-                session.setAttribute("userId", admin.getAdminId());
-                session.setAttribute("username", admin.getAdminName());
-                session.setAttribute("admin", admin);
-                return "redirect:/admindashboard?loginAdmin";
+                session.setAttribute("adminId",   admin.getAdminId());
+                session.setAttribute("adminName", admin.getAdminName()); // ✅ FIXED: capital N
+                session.setAttribute("admin",     admin);
+                session.setAttribute("role",      "ADMIN");
+                return "redirect:/admin/admindashboard";
             }
         }
-        
-        return "loginAdmin";
+
+        model.addAttribute("error", "Invalid email or password.");
+        return "Admin/admin-login";  // ✅ FIXED: was "loginAdmin" (wrong template name)
     }
-    
+
+    // ─── ADMIN DASHBOARD ──────────────────────────────────────────────────────
+    @GetMapping("/admindashboard")
+    public String adminDashboard(HttpSession session, Model model) {
+        if (!isAdminLoggedIn(session)) return "redirect:/admin/login";
+
+        model.addAttribute("adminName",     session.getAttribute("adminName")); // ✅ capital N
+        model.addAttribute("allUsers",      userService.getAllUsers());
+        model.addAttribute("allTransctions",transactionService.getAllTransactions());
+        model.addAttribute("usercount",     userService.getAllUsers().size());
+        model.addAttribute("txCount",       transactionService.getAllTransactions().size());
+        return "Admin/admin-dashboard";
+    }
+
+    // ─── DELETE USER ──────────────────────────────────────────────────────────
+    @GetMapping("/deleteUser/{id}")
+    public String deleteUser(@PathVariable long id, HttpSession session) {
+        if (!isAdminLoggedIn(session)) return "redirect:/admin/login";
+        userService.deleteUser(id);
+        return "redirect:/admin/admindashboard?deleted";  // ✅ FIXED: was /admin/dashboard
+    }
+
+    // ─── LOGOUT ───────────────────────────────────────────────────────────────
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/admin/login?logout";
+    }
 }
-
-
-
-// @RestController
-// public class Authentication {
-
-//     @Autowired
-//     private UserRepository userRepository;
-
-//     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-
-//     // 1. Show the Registration Page
-//     @GetMapping("/register")
-//     public String showRegistrationForm(Model model) {
-//         model.addAttribute("user", new UseradminregistrationDto());
-//         return "register"; // looks for register.html in templates
-//     }
-
-//     // 2. Handle the Form Submission
-    
-//     @PostMapping("/login")
-//     public String loginUser(@RequestParam String email, 
-//                             @RequestParam String password, 
-//                             HttpSession session, 
-//                             Model model) {
-
-//         Optional<User> optionaluser = userRepository.findByEmail(email);
-
-//         if (optionaluser.isPresent()) {
-//           User user = optionaluser.get();
-
-//             if (encoder.matches(password, user.getPassword())) {
-
-                
-//                 session.setAttribute("userId", user.getUserId());
-//                 session.setAttribute("username", user.getUsername());
-//                 session.setAttribute("user", user);
-//                 return "redirect:/dashboard";
-//             }
-
-//         }
-         
-//             model.addAttribute("error", "Invalid email or password");
-//             return "login";
-        
-//     }
-
-
-//     @GetMapping("/logout")
-//     public String logout(HttpSession session) {
-//         session.invalidate(); // destroy session
-//         return "redirect:/login?logout";
-//  }
-// }

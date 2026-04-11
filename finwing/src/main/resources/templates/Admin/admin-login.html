@@ -52,6 +52,9 @@
             <p>Restricted — authorised personnel only</p>
         </div>
         <div class="card-body">
+             <div th:if="${param.success}" class="alert alert-success">
+        Registration Successful ✅ Please login
+    </div>
             <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
             <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 
@@ -68,7 +71,7 @@
             </form>
 
             <div class="links">
-                <p>New admin? <a th:href="@{/admin/register}">Register here</a></p>
+                <p>New admin? <a th:href="@{/admin/adminRegister}">Register here</a></p>
                 <p style="margin-top:.5rem"><a th:href="@{/login}">← User Login</a></p>
             </div>
         </div>
