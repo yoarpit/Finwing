@@ -9,6 +9,7 @@
     <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/homestyle.css}">
  
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font (optional but makes UI better) -->
@@ -131,6 +132,7 @@
     <canvas id="expenseChart"></canvas>
 </div>
         </section>
+        <div th:replace="footer :: footer"></div>
 
     </main>
 

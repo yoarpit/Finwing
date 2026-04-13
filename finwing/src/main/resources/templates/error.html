@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+     <link rel="stylesheet" th:href="@{/css/homestyle.css}">
     <title>Finwing · Error</title>
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
@@ -21,5 +22,6 @@
     <p th:text="${message}">An unexpected error occurred.</p>
     <a href="/">← Back to Home</a>
 </div>
+<div th:replace="footer :: footer"></div>
 </body>
 </html>

@@ -9,16 +9,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.finwing.dto.TransactionDto;
 import com.finwing.entity.Transaction;
 import com.finwing.entity.User;
 import com.finwing.repository.TransactionRepository;
-
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 
-@Controller  
+@Controller
 public class Transactioncon {
 
     @Autowired
@@ -27,13 +26,11 @@ public class Transactioncon {
     @GetMapping("/transaction")
     public String showTransaction(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
+        if (user == null) return "redirect:/login";
+
         List<Transaction> transactions = transactionrepository.findByUser(user);
         model.addAttribute("transactions", transactions);
-        model.addAttribute("newTx", new Transaction());
-        model.addAttribute("currency", user.getCurrency());
+        model.addAttribute("transactionForm", new TransactionDto()); 
         return "transaction";
     }
 
@@ -43,20 +40,18 @@ public class Transactioncon {
             @RequestParam String type,
             @RequestParam String category,
             @RequestParam String description,
-            @RequestParam(required = false) LocalDate date,  // ← ADD
+            @RequestParam(required = false) LocalDate date,
             HttpSession session) {
 
         User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
+        if (user == null) return "redirect:/login";
 
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
         transaction.setType(type);
         transaction.setCategory(category);
         transaction.setDescription(description);
-        transaction.setDate(date != null ? date : LocalDate.now());  // ← FIX
+        transaction.setDate(date != null ? date : LocalDate.now());
         transaction.setCreatedAt(LocalDateTime.now());
         transaction.setUser(user);
         transactionrepository.save(transaction);
