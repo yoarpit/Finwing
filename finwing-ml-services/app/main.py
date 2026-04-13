@@ -1,65 +1,43 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from groq import Groq
-import os
-from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
+import logging
 
-# load env
-load_dotenv()
+from app.schemas import Transaction
+from app.services.ai_service import build_prompt, get_ai_result
+from app.services.rule_engine import apply_rules
 
-# init groq client
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+app = FastAPI(title="Finwing AI API 🚀")
 
-app = FastAPI(title="Transaction Categorization API 🚀")
+# CORS (for frontend / Spring Boot)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# request model
-class Transaction(BaseModel):
-    description: str
-    type: str
-    payment_mode: str
-    expense: float
-
-# core function
-def categorize_transaction(data: Transaction):
-
-    prompt = f"""
-You are a fintech AI.
-
-Classify transaction into ONE category from:
-Food, Travel, Bills, Shopping, Groceries, Fuel, Fitness,
-Entertainment, Electronics, Education, Health, Insurance,
-Investment, Rent, Subscriptions, Personal Care, Gifts, Pets,
-Misc, Income
-
-Rules:
-- Salary, bonus, credit → Income
-- Bills → Bills
-- Food apps → Food
-- Transport → Travel
-
-Transaction:
-Description: {data.description}
-Type: {data.type}
-Payment: {data.payment_mode}
-Amount: {data.expense}
-
-Return ONLY the category name. No explanation.
-"""
-
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0
-    )
-
-    return response.choices[0].message.content.strip()
+# logging
+logging.basicConfig(level=logging.INFO)
 
 
-# API endpoint
+@app.get("/")
+def home():
+    return {"message": "Finwing AI Running 🚀"}
+
+
 @app.post("/predict")
 def predict(data: Transaction):
-    try:
-        category = categorize_transaction(data)
-        return {"category": category}
-    except Exception as e:
-        return {"error": str(e)}
+
+    logging.info(f"Incoming: {data}")
+
+    # 🔥 1. RULE ENGINE (FAST)
+    rule_result = apply_rules(data)
+    if rule_result:
+        return rule_result
+
+    # 🔥 2. AI MODEL
+    prompt = build_prompt(data)
+    result = get_ai_result(prompt)
+
+    return result
