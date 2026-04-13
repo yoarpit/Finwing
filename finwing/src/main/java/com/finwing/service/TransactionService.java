@@ -8,6 +8,8 @@ import com.finwing.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import java.io.InputStreamReader;
 import java.time.LocalDate;
@@ -28,6 +30,7 @@ public class TransactionService {
         tx.setType(dto.getType());
         tx.setCategory(dto.getCategory());
         tx.setDescription(dto.getDescription());
+         tx.setDate(dto.getDate() != null ? dto.getDate() : LocalDate.now());
         tx.setCreatedAt(dto.getDate() != null ? dto.getDate().atStartOfDay() : LocalDateTime.now());
         tx.setUser(user);
 

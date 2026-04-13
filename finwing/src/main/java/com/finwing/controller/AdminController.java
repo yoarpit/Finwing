@@ -119,7 +119,7 @@ public class AdminController {
         }
 
         model.addAttribute("error", "Invalid email or password.");
-        return "Admin/admin-login";  // ✅ FIXED: was "loginAdmin" (wrong template name)
+        return "Admin/admin-login";  
     }
 
     // ─── ADMIN DASHBOARD ──────────────────────────────────────────────────────
@@ -127,11 +127,11 @@ public class AdminController {
     public String adminDashboard(HttpSession session, Model model) {
         if (!isAdminLoggedIn(session)) return "redirect:/admin/login";
 
-        model.addAttribute("adminName",     session.getAttribute("adminName")); // ✅ capital N
-        model.addAttribute("allUsers",      userService.getAllUsers());
-        model.addAttribute("allTransctions",transactionService.getAllTransactions());
-        model.addAttribute("usercount",     userService.getAllUsers().size());
-        model.addAttribute("txCount",       transactionService.getAllTransactions().size());
+        model.addAttribute("adminName", session.getAttribute("adminName"));
+    model.addAttribute("allUsers", userService.getAllUsers());
+    model.addAttribute("allTransactions", transactionService.getAllTransactions());
+    model.addAttribute("userCount", userService.getAllUsers().size());
+    model.addAttribute("txCount", transactionService.getAllTransactions().size());
         return "Admin/admin-dashboard";
     }
 

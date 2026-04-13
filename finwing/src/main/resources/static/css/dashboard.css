@@ -137,3 +137,44 @@ body {
         grid-template-columns: 1fr;
     }
 }
+.tx-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.tx-item:last-of-type { border-bottom: none; }
+
+.tx-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tx-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.tx-desc {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.tx-cat {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+}
+
+.tx-amount {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.tx-amount.income { color: #2ecc71; }
+.tx-amount.expense { color: #e74c3c; }

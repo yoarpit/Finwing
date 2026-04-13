@@ -1,9 +1,11 @@
 package com.finwing.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +27,8 @@ public class Transaction {
     private String category;
 
     private String description;
+     @Column(nullable = false)
+    private LocalDate date;  
     @CreationTimestamp
     private LocalDateTime createdAt;
 

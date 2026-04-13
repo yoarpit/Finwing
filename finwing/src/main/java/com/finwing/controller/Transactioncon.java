@@ -1,5 +1,6 @@
 package com.finwing.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,56 +18,49 @@ import com.finwing.repository.TransactionRepository;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 
-
-@Controller
+@Controller  
 public class Transactioncon {
-   @Autowired 
-   TransactionRepository transactionrepository;
 
-@GetMapping("/transaction")
-public String showTransaction(Model model,HttpSession session){
-      User user = (User) session.getAttribute("user");
+    @Autowired
+    TransactionRepository transactionrepository;
 
-      if (user == null) {
-        return "redirect:/login";
-      }
-      List<Transaction> transactions = transactionrepository.findByUser(user);
-
-      model.addAttribute("transactions", transactions);
-      model.addAttribute("newTx", new Transaction());
-
-      return "transaction";       
- 
-}
-
-
-@PostMapping("/transaction")
-public String makeTransaction( @RequestParam Double amount,
-            @RequestParam String type,
-            @RequestParam String category,
-            @RequestParam String description,
-            HttpSession session){
-     
-      User user = (User) session.getAttribute("user");
-
+    @GetMapping("/transaction")
+    public String showTransaction(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
-        Transaction transaction=new Transaction();
+        List<Transaction> transactions = transactionrepository.findByUser(user);
+        model.addAttribute("transactions", transactions);
+        model.addAttribute("newTx", new Transaction());
+        model.addAttribute("currency", user.getCurrency());
+        return "transaction";
+    }
+
+    @PostMapping("/transaction")
+    public String makeTransaction(
+            @RequestParam Double amount,
+            @RequestParam String type,
+            @RequestParam String category,
+            @RequestParam String description,
+            @RequestParam(required = false) LocalDate date,  // ← ADD
+            HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        Transaction transaction = new Transaction();
         transaction.setAmount(amount);
         transaction.setType(type);
         transaction.setCategory(category);
         transaction.setDescription(description);
+        transaction.setDate(date != null ? date : LocalDate.now());  // ← FIX
         transaction.setCreatedAt(LocalDateTime.now());
         transaction.setUser(user);
         transactionrepository.save(transaction);
-        
+
         return "redirect:/transaction";
-   
-}
-
-
-
-
-    
+    }
 }
