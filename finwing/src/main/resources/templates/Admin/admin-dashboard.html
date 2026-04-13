@@ -132,12 +132,12 @@
                     <th>Date</th>
                     <th>Type</th>
                     <th>Amount</th>
-                    <th>AI Category</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 <tr th:if="${#lists.isEmpty(allTransactions)}">
-                    <td colspan="8" style="text-align:center;color:var(--muted);padding:2rem">No transactions yet.</td>
+                    <td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">No transactions yet.</td>
                 </tr>
                 <tr th:each="tx, stat : ${allTransactions}">
                     <td th:text="${stat.index + 1}" style="color:var(--muted)">1</td>
@@ -151,8 +151,7 @@
                               th:text="${tx.type}">type</span></td>
                     <td th:text="'₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')}"
                         th:style="${tx.type == 'income'} ? 'color:#2ecc71;font-weight:600' : 'color:#e63946;font-weight:600'">₹0</td>
-                    <td th:text="${tx.aiCategory != null ? tx.aiCategory : '-'}"
-                        style="color:var(--gold);font-size:.8rem">-</td>
+                    
                 </tr>
             </tbody>
         </table>
