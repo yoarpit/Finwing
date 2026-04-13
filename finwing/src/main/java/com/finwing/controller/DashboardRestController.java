@@ -18,10 +18,18 @@ public class DashboardRestController {
     @GetMapping
     public DashboardDto getDashboard(HttpSession session) {
 
-        Long userId = (Long) session.getAttribute("userId");
+        Object userObj = session.getAttribute("userId");
 
-        if (userId == null) {
+        if (userObj == null) {
             throw new RuntimeException("User not logged in");
+        }
+
+        Long userId;
+
+        try {
+            userId = Long.valueOf(userObj.toString());
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid session userId");
         }
 
         return service.getDashboard(userId);

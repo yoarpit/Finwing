@@ -1,16 +1,17 @@
 package com.finwing.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.finwing.entity.User;
 import com.finwing.repository.UserRepository;
 import com.finwing.service.TransactionService;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.Map;
 
 @Controller
 public class Dashboard {
@@ -23,12 +24,17 @@ public class Dashboard {
 
     @GetMapping("/dashboard")
     public String showDashboard(HttpSession session, Model model) {
-        Object userId = session.getAttribute("userId");
-        if (userId == null) {
+
+        Object userIdObj = session.getAttribute("userId");
+
+        if (userIdObj == null) {
             return "redirect:/login";
         }
 
-        User user = userRepository.findById(((Number) userId).longValue()).orElse(null);
+        Long userId = ((Number) userIdObj).longValue();
+
+        User user = userRepository.findById(userId).orElse(null);
+
         if (user == null) {
             return "redirect:/login";
         }
