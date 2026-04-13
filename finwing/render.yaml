@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: finwing
+    env: java
+    rootDir: finwing
+    buildCommand: mvn clean install -DskipTests
+    startCommand: cd target && java -jar *.jar
