@@ -9,6 +9,7 @@
     <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/homestyle.css}">
  
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font (optional but makes UI better) -->
@@ -86,33 +87,35 @@
         </div>
 
         <!-- Recent Transactions -->
-        <div class="card">
-            <div class="card-title">Recent Transactions</div>
-            <div th:if="${#lists.isEmpty(recentTransactions)}" class="empty-state">
-                <p>No transactions yet.</p>
-                <a th:href="@{/transaction}">Add your first →</a>
+<!-- Recent Transactions -->
+<div class="card">
+    <div class="card-title">Recent Transactions</div>
+    <div th:if="${#lists.isEmpty(recentTransactions)}" class="empty-state">
+        <p>No transactions yet.</p>
+        <a th:href="@{/transaction}">Add your first →</a>
+    </div>
+    <div th:each="tx : ${recentTransactions}" class="tx-item">
+        <div class="tx-left">
+            <div class="tx-dot"
+                 th:style="'background:' + (${#strings.equalsIgnoreCase(tx.type, 'income')} ? '#2ecc71' : '#e74c3c')">
             </div>
-            <div th:each="tx : ${recentTransactions}" class="tx-item">
-                <div class="tx-left">
-                    <div class="tx-dot"
-                         th:style="'background:' + (${tx.type == 'income'} ? '#2ecc71' : '#e74c3c')"></div>
-                    <div>
-                        <div class="tx-desc" th:text="${tx.description}">Desc</div>
-                        <div class="tx-cat" th:text="${tx.category}">Category</div>
-                    </div>
-                </div>
-                <div class="tx-amount"
-                     th:classappend="${tx.type == 'income'} ? 'income' : 'expense'"
-                     th:text="${tx.type == 'income'} ? ('+₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')}) : ('-₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')})">
-                    ₹0
-                </div>
-            </div>
-            <div style="margin-top:1rem;text-align:right">
-                <a th:href="@{/transaction}" style="color:var(--gold);font-size:.8rem;text-decoration:none">
-                    View all <span th:text="${totalCount}">0</span> transactions →
-                </a>
+            <div>
+                <div class="tx-desc" th:text="${tx.description}">Desc</div>
+                <div class="tx-cat" th:text="${tx.category}">Category</div>
             </div>
         </div>
+        <div class="tx-amount"
+             th:classappend="${#strings.equalsIgnoreCase(tx.type, 'income')} ? 'income' : 'expense'"
+             th:text="${#strings.equalsIgnoreCase(tx.type, 'income')} ? ('+₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')}) : ('-₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')})">
+            ₹0
+        </div>
+    </div>
+    <div style="margin-top:1rem;text-align:right">
+        <a th:href="@{/transaction}" style="color:var(--gold);font-size:.8rem;text-decoration:none">
+            View all <span th:text="${totalCount}">0</span> transactions →
+        </a>
+    </div>
+</div>
     </div>
 
             <!-- INSIGHT -->
@@ -129,6 +132,7 @@
     <canvas id="expenseChart"></canvas>
 </div>
         </section>
+        <div th:replace="footer :: footer"></div>
 
     </main>
 

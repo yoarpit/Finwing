@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WealthMind AI – Transactions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <style>
+        /* AAPKA SAARA CSS YAHAN SAME RAHEGA - MAINE KUCH NAHI BADLA */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg0: #0c0e13; --bg1: #12151c; --bg2: #191d27;
+            --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.13);
+            --gold: #d4a843; --gold-lt: #e2bc60; --gold-bg: rgba(212,168,67,0.12);
+            --green: #34d87a; --red: #f06060; --t1: #eceef5; --t2: #9ba3b8; --t3: #555e75;
+            --sans: 'Outfit', sans-serif; --mono: 'IBM Plex Mono', monospace;
+        }
+        body { font-family: var(--sans); background: var(--bg0); color: var(--t1); min-height: 100vh; }
+        .navbar { height: 58px; background: #090b0f; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 36px; position: sticky; top: 0; z-index: 100; }
+        .nav-brand { display: flex; align-items: center; gap: 11px; margin-right: auto; }
+        .nav-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 15px; font-weight: 700; color: #000; }
+        .brand-name { font-size: 15px; font-weight: 700; color: var(--t1); }
+        .brand-sub { font-family: var(--mono); font-size: 8.5px; letter-spacing: 2px; color: var(--t3); text-transform: uppercase; }
+        .nav-links { display: flex; gap: 4px; }
+        .nav-links a { font-size: 14px; padding: 7px 20px; border-radius: 8px; color: var(--t2); text-decoration: none; transition: all 0.15s; }
+        .nav-links a.active { color: var(--gold); background: var(--gold-bg); border: 1px solid rgba(212,168,67,0.3); font-weight: 700; }
+        .nav-date { margin-left: 36px; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--t2); }
+        .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,216,122,0.5); } 70% { box-shadow: 0 0 0 8px rgba(52,216,122,0); } 100% { box-shadow: 0 0 0 0 rgba(52,216,122,0); } }
+        .page { max-width: 1180px; margin: 0 auto; padding: 44px 36px 100px; }
+        .page-header { display: flex; justify-content: space-between; margin-bottom: 36px; }
+        .page-header h1 { font-size: 42px; font-weight: 800; }
+        .page-meta { font-family: var(--mono); font-size: 12px; color: var(--t3); margin-top: 8px; }
+        .btn-cancel { padding: 10px 22px; border: 1.5px solid var(--gold); border-radius: 8px; color: var(--gold); text-decoration: none; font-weight: 700; }
+        .form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 26px 28px; margin-bottom: 16px; }
+        .form-section-title { font-family: var(--mono); font-size: 11px; letter-spacing: 2.5px; color: var(--gold); text-transform: uppercase; margin-bottom: 22px; }
+        .form-row { display: grid; grid-template-columns: 2.2fr 1fr 1.15fr 1fr 1fr 96px; gap: 14px; align-items: flex-end; }
+        .fld { display: flex; flex-direction: column; gap: 8px; }
+        .fld label { font-size: 13px; font-weight: 600; color: var(--t2); }
+        .fld input, .fld select { height: 44px; background: var(--bg1); border: 1px solid var(--border2); border-radius: 8px; padding: 0 14px; color: var(--t1); outline: none; }
+        .btn-add { height: 44px; background: var(--gold); color: #0c0e13; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        .table-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .tbl-head { display: grid; grid-template-columns: 2.4fr 1.1fr 1.1fr 1.1fr 1.2fr 52px; padding: 0 26px; height: 44px; align-items: center; border-bottom: 1px solid var(--border); }
+        .tbl-head span { font-size: 13px; font-weight: 600; color: var(--t2); }
+        .tbl-row { display: grid; grid-template-columns: 2.4fr 1.1fr 1.1fr 1.1fr 1.2fr 52px; padding: 0 26px; min-height: 60px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .tx-desc { font-size: 15px; font-weight: 700; }
+        .tx-cat { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--t2); }
+        .cat-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .c-Housing { background: #f97316; } .c-Food { background: #34d87a; } .c-Income { background: #34d87a; } .c-Savings { background: #3b82f6; } .c-Health { background: #f06060; } .c-Entertainment { background: #a78bfa; } .c-Transport { background: #14b8a6; } .c-Shopping { background: #f59e0b; } .c-Education { background: #8b5cf6; } .c-Other { background: #555e75; }
+        .tx-date { font-family: var(--mono); font-size: 13px; color: var(--t2); }
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: lowercase; }
+        .badge-expense { background: rgba(240,96,96,0.15); color: #f87171; border: 1px solid rgba(240,96,96,0.2); }
+        .badge-income { background: rgba(52,216,122,0.12); color: #4ade80; border: 1px solid rgba(52,216,122,0.18); }
+        .tx-amt { font-family: var(--mono); font-size: 15px; font-weight: 700; text-align: right; }
+        .tx-amt.expense { color: #f87171; } .tx-amt.income { color: #4ade80; }
+        .btn-del { width: 32px; height: 32px; border-radius: 7px; background: transparent; border: 1px solid var(--border2); color: var(--t3); cursor: pointer; }
+        .empty { padding: 64px 24px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand">
+        <div class="nav-logo">&#8377;</div>
+        <div>
+            <div class="brand-name">WealthMind AI</div>
+            <div class="brand-sub">Financial Intelligence Platform</div>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/transactions}" class="active">Transactions</a>
+        <a th:href="@{/ai-advisor}">AI Advisor</a>
+    </div>
+    <div class="nav-date">
+        <span class="pulse-dot"></span>
+        <span th:text="${currentMonth}">March 2026</span>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="page-header">
+        <div>
+            <h1>Transactions</h1>
+            <p class="page-meta" th:text="${(transactions != null ? transactions.size() : 0) + ' records · ' + currentMonth}"></p>
+        </div>
+        <a class="btn-cancel" th:href="@{/dashboard}">&#x2715;&ensp;Cancel</a>
+    </div>
+
+    <div class="form-card">
+        <div class="form-section-title">New Transaction</div>
+        <form th:action="@{/transactions/add}" th:object="${transactionForm}" method="post">
+            <div class="form-row">
+                <div class="fld">
+                    <label>Description</label>
+                    <input type="text" th:field="*{description}" placeholder="e.g. Grocery shopping" required/>
+                </div>
+                <div class="fld">
+                    <label>Amount (&#8377;)</label>
+                    <input type="number" th:field="*{amount}" placeholder="0" step="0.01" required/>
+                </div>
+                <div class="fld">
+                    <label>Date</label>
+                    <input type="date" th:field="*{date}" id="dateField"/>
+                </div>
+                <div class="fld">
+                    <label>Type</label>
+                    <select th:field="*{type}">
+                        <option value="EXPENSE">Expense</option>
+                        <option value="INCOME">Income</option>
+                    </select>
+                </div>
+                <div class="fld">
+                    <label>Category</label>
+                    <select th:field="*{category}">
+                        <option value="Food">Food</option>
+                        <option value="Housing">Housing</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Income">Income</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="fld">
+                    <button type="submit" class="btn-add">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-card">
+        <div class="tbl-head">
+            <span>Description</span>
+            <span>Category</span>
+            <span>Date</span>
+            <span>Type</span>
+            <span>Amount</span>
+            <span></span>
+        </div>
+
+        <div th:each="tx : ${transactions}" class="tbl-row">
+            <div class="tx-desc" th:text="${tx.description}">Description</div>
+            <div class="tx-cat">
+                <span class="cat-dot" th:classappend="'c-' + ${tx.category}"></span>
+                <span th:text="${tx.category}">Category</span>
+            </div>
+            <div class="tx-date" th:text="${tx.date}">2026-03-01</div>
+            <div>
+                <span class="badge" 
+                      th:classappend="${tx.type == 'EXPENSE'} ? 'badge-expense' : 'badge-income'"
+                      th:text="${#strings.toLowerCase(tx.type)}">type</span>
+            </div>
+            <div class="tx-amt" 
+                 th:classappend="${tx.type == 'EXPENSE'} ? 'expense' : 'income'"
+                 th:text="${tx.type == 'EXPENSE' ? '-₹' + tx.amount : '+₹' + tx.amount}">
+                 ₹0.00
+            </div>
+            <div>
+                <form th:action="@{/transactions/delete/{id}(id=${tx.id})}" method="post">
+                    <button type="submit" class="btn-del" onclick="return confirm('Delete?')">&#x2715;</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="empty" th:if="${transactions == null or transactions.isEmpty()}">
+            <p>No transactions found.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        const d = document.getElementById('dateField');
+        if (d && !d.value) d.value = new Date().toISOString().split('T')[0];
+    };
+</script>
+</body>
+</html>
