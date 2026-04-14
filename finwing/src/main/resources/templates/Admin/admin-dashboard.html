@@ -37,6 +37,7 @@
         tr:hover td{background:#ffffff04}
         .badge{display:inline-block;padding:.15rem .55rem;border-radius:99px;font-size:.68rem;font-family:'IBM Plex Mono',monospace}
         .badge-active{background:#2ecc7120;color:#2ecc71;border:1px solid #2ecc7140}
+        .badge-inactive{background:#e6394620;color:#e63946;border:1px solid #e6394640}
         .badge-income{background:#2ecc7120;color:#2ecc71;border:1px solid #2ecc7140}
         .badge-expense{background:#e6394620;color:#e63946;border:1px solid #e6394640}
         .btn-del{color:#e63946;background:none;border:1px solid #e6394640;border-radius:4px;padding:.2rem .6rem;font-size:.75rem;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;transition:all .2s}
@@ -107,7 +108,8 @@
                     <td th:text="${u.email}" style="color:var(--muted)">email</td>
                     <td th:text="${u.mobileNo}" style="color:var(--muted)">mobile</td>
                     <td th:text="${u.currency}">INR</td>
-                    <td><span class="badge badge-active" th:if="${u.isActive}">Active</span></td>
+                    <td><span class="badge badge-active" th:if="${u.isActive}">Active</span>
+    <span class="badge badge-inactive" th:unless="${u.isActive}">Inactive</span></td>
                     <td th:text="${#temporals.format(u.createdAt, 'dd MMM yyyy')}" style="color:var(--muted);font-size:.8rem">Date</td>
                     <td>
                         <a th:href="@{/admin/deleteUser/{id}(id=${u.userId})}"

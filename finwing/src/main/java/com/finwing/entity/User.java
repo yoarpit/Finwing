@@ -32,7 +32,8 @@ import java.util.List;
         @Column(nullable = false)
         private String fullName;
         
-        @Column(columnDefinition = "boolean default true")
+        
+        @Column(nullable = false)
         private Boolean isActive = true;
 
         @org.hibernate.annotations.CreationTimestamp
