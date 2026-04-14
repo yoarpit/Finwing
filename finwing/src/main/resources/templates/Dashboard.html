@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/homestyle.css}">
- 
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font (optional but makes UI better) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -65,58 +65,59 @@
             </div>
 
             <!-- CHARTS + TRANSACTIONS -->
-             <div class="two-col">
-        <!-- Expense Breakdown -->
-        <div class="card">
-            <div class="card-title">Expense Breakdown</div>
-            <div th:if="${#maps.isEmpty(categoryBreakdown)}" class="empty-state">
-                <p>No expense data yet.</p>
-                <a th:href="@{/transaction}" class="btn-primary">Add transactions →</a>
-            </div>
-            <div th:unless="${#maps.isEmpty(categoryBreakdown)}">
-                <div th:each="entry : ${categoryBreakdown}" class="cat-row">
-                    <span class="cat-label" th:text="${entry.key}">Category</span>
-                    <div class="cat-bar-wrap">
-                        <div class="cat-bar"
-                             th:style="'width:' + (${totalExpense} > 0 ? ${#numbers.formatDecimal(entry.value / totalExpense * 100, 1, 0)} : 0) + '%;background:var(--gold)'">
+            <div class="two-col">
+                <!-- Expense Breakdown -->
+                <div class="card">
+                    <div class="card-title">Expense Breakdown</div>
+                    <div th:if="${#maps.isEmpty(categoryExpenses)}" class="empty-state">
+                        <p>No expense data yet.</p>
+                        <a th:href="@{/transaction}" class="btn-primary">Add transactions →</a>
+                    </div>
+                    <div th:unless="${#maps.isEmpty(categoryExpenses)}">
+                        <div th:each="entry : ${categoryExpenses}" class="cat-row"> <span class="cat-label"
+                                th:text="${entry.key}">Category</span>
+                            <div class="cat-bar-wrap">
+                                <div class="cat-bar"
+                                    th:style="'width:' + (${totalExpense} > 0 ? ${#numbers.formatDecimal(entry.value / totalExpense * 100, 1, 0)} : 0) + '%;background:var(--gold)'">
+                                </div>
+                            </div>
+                            <span class="cat-amount"
+                                th:text="'₹' + ${#numbers.formatDecimal(entry.value, 1, 'COMMA', 0, 'POINT')}">₹0</span>
                         </div>
                     </div>
-                    <span class="cat-amount" th:text="'₹' + ${#numbers.formatDecimal(entry.value, 1, 'COMMA', 0, 'POINT')}">₹0</span>
+                </div>
+
+                <!-- Recent Transactions -->
+                <!-- Recent Transactions -->
+                <div class="card">
+                    <div class="card-title">Recent Transactions</div>
+                    <div th:if="${#lists.isEmpty(recentTransactions)}" class="empty-state">
+                        <p>No transactions yet.</p>
+                        <a th:href="@{/transaction}">Add your first →</a>
+                    </div>
+                    <div th:each="tx : ${recentTransactions}" class="tx-item">
+                        <div class="tx-left">
+                            <div class="tx-dot"
+                                th:style="'background:' + (${#strings.equalsIgnoreCase(tx.type, 'income')} ? '#2ecc71' : '#e74c3c')">
+                            </div>
+                            <div>
+                                <div class="tx-desc" th:text="${tx.description}">Desc</div>
+                                <div class="tx-cat" th:text="${tx.category}">Category</div>
+                            </div>
+                        </div>
+                        <div class="tx-amount"
+                            th:classappend="${#strings.equalsIgnoreCase(tx.type, 'income')} ? 'income' : 'expense'"
+                            th:text="${#strings.equalsIgnoreCase(tx.type, 'income')} ? ('+₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')}) : ('-₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')})">
+                            ₹0
+                        </div>
+                    </div>
+                    <div style="margin-top:1rem;text-align:right">
+                        <a th:href="@{/transaction}" style="color:var(--gold);font-size:.8rem;text-decoration:none">
+                            View all <span th:text="${totalCount}">0</span> transactions →
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Recent Transactions -->
-<!-- Recent Transactions -->
-<div class="card">
-    <div class="card-title">Recent Transactions</div>
-    <div th:if="${#lists.isEmpty(recentTransactions)}" class="empty-state">
-        <p>No transactions yet.</p>
-        <a th:href="@{/transaction}">Add your first →</a>
-    </div>
-    <div th:each="tx : ${recentTransactions}" class="tx-item">
-        <div class="tx-left">
-            <div class="tx-dot"
-                 th:style="'background:' + (${#strings.equalsIgnoreCase(tx.type, 'income')} ? '#2ecc71' : '#e74c3c')">
-            </div>
-            <div>
-                <div class="tx-desc" th:text="${tx.description}">Desc</div>
-                <div class="tx-cat" th:text="${tx.category}">Category</div>
-            </div>
-        </div>
-        <div class="tx-amount"
-             th:classappend="${#strings.equalsIgnoreCase(tx.type, 'income')} ? 'income' : 'expense'"
-             th:text="${#strings.equalsIgnoreCase(tx.type, 'income')} ? ('+₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')}) : ('-₹' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 0, 'POINT')})">
-            ₹0
-        </div>
-    </div>
-    <div style="margin-top:1rem;text-align:right">
-        <a th:href="@{/transaction}" style="color:var(--gold);font-size:.8rem;text-decoration:none">
-            View all <span th:text="${totalCount}">0</span> transactions →
-        </a>
-    </div>
-</div>
-    </div>
 
             <!-- INSIGHT -->
             <div class="card insight-card">
@@ -128,38 +129,39 @@
                     </p>
                 </div>
             </div>
-<div style="width: 50%; max-width: 400px; padding: 50px;">
-    <canvas id="expenseChart"></canvas>
-</div>
+            <div style="width: 50%; max-width: 400px; padding: 50px;">
+                <canvas id="expenseChart"></canvas>
+            </div>
         </section>
         <div th:replace="footer :: footer"></div>
 
     </main>
 
     <script>
-const ctx = document.getElementById('expenseChart');
+        const ctx = document.getElementById('expenseChart');
 
-new Chart(ctx, {
-    type: 'doughnut',  // can change to 'bar' or 'line'
-    data: {
-        labels: ['Food', 'Rent', 'Transport', 'Shopping', 'Other'],
-        datasets: [{
-            label: 'Expenses',
-            data: [3000, 8000, 2000, 1500, 1000],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                labels: {
-                    color: "#ffffff"
+        new Chart(ctx, {
+            type: 'doughnut',  // can change to 'bar' or 'line'
+            data: {
+                labels: ['Food', 'Rent', 'Transport', 'Shopping', 'Other'],
+                datasets: [{
+                    label: 'Expenses',
+                    data: [3000, 8000, 2000, 1500, 1000],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: "#ffffff"
+                        }
+                    }
                 }
             }
-        }
-    }
-});
-</script>
+        });
+    </script>
 </body>
+
 </html>
