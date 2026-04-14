@@ -178,3 +178,42 @@ body {
 
 .tx-amount.income { color: #2ecc71; }
 .tx-amount.expense { color: #e74c3c; }
+/* ===== FORCE YELLOW BUTTON ===== */
+.btn-primary {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #d8af0d !important;  /* 🔥 FORCE */
+    color: #000 !important;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none !important;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* Hover (same yellow, no change) */
+.btn-primary:hover {
+    background: #a58710 !important;  /* 🔥 FIX */
+    transform: translateY(-2px);
+}
+
+/* ===== FINAL OVERRIDE BUTTON FIX ===== */
+a.btn-primary,
+.btn-primary,
+button.btn-primary {
+    background-color: #facc15 !important;
+    color: #000 !important;
+    border: none !important;
+    text-decoration: none !important;
+}
+
+/* Hover bhi same rahe */
+a.btn-primary:hover,
+.btn-primary:hover,
+button.btn-primary:hover {
+    background-color: #facc15 !important;
+    color: #000 !important;
+}
