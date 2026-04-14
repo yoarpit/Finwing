@@ -71,7 +71,7 @@
             <div class="card-title">Expense Breakdown</div>
             <div th:if="${#maps.isEmpty(categoryBreakdown)}" class="empty-state">
                 <p>No expense data yet.</p>
-                <a th:href="@{/transaction}">Add transactions →</a>
+                <a th:href="@{/transaction}" class="btn-primary">Add transactions →</a>
             </div>
             <div th:unless="${#maps.isEmpty(categoryBreakdown)}">
                 <div th:each="entry : ${categoryBreakdown}" class="cat-row">

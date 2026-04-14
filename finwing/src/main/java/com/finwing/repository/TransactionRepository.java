@@ -33,6 +33,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     // ✅ FIXED
     List<Transaction> findAllByOrderByCreatedAtDesc();
+    void deleteByUser(User user); 
     
 
 }
