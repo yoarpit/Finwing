@@ -127,11 +127,18 @@ public class AdminController {
     public String adminDashboard(HttpSession session, Model model) {
         if (!isAdminLoggedIn(session)) return "redirect:/admin/login";
 
-        model.addAttribute("adminName", session.getAttribute("adminName"));
-    model.addAttribute("allUsers", userService.getAllUsers());
-    model.addAttribute("allTransactions", transactionService.getAllTransactions());
-    model.addAttribute("userCount", userService.getAllUsers().size());
-    model.addAttribute("txCount", transactionService.getAllTransactions().size());
+        String adminName = (String) session.getAttribute("adminName");
+        if (adminName == null) {
+            Admin admin = (Admin) session.getAttribute("admin");
+            adminName = admin != null ? admin.getAdminName() : "Admin";
+        }
+
+        model.addAttribute("adminName", adminName);
+        model.addAttribute("allUsers", userService.getAllUsers());
+        model.addAttribute("allTransactions", transactionService.getAllTransactions());
+        model.addAttribute("userCount", userService.getAllUsers().size());
+        model.addAttribute("txCount", transactionService.getAllTransactions().size());
+        model.addAttribute("adminCount", adminRepository.findAll().size());
         return "Admin/admin-dashboard";
     }
 

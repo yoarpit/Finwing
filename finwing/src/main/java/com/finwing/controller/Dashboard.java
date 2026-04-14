@@ -36,6 +36,6 @@ public class Dashboard {
         Map<String, Object> stats = transactionService.getDashboardStats(user);
         stats.forEach(model::addAttribute);
 
-        return "dashboard";
+        return "Dashboard";
     }
 }

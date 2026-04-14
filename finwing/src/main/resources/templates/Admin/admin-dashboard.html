@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Finwing · Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -44,6 +45,8 @@
         .btn-del:hover{background:#e6394620}
         .alert{padding:.75rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem}
         .alert-success{background:#2ecc7120;border:1px solid #2ecc7150;color:#7eedc0}
+        .chart-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1rem 1.2rem;margin-bottom:1.5rem}
+        .chart-title{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem}
     </style>
 </head>
 <body>
@@ -78,6 +81,15 @@
             <div class="stat-label">Total Transactions</div>
             <div class="stat-value" th:text="${txCount}">0</div>
         </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Admins</div>
+            <div class="stat-value red" th:text="${adminCount}">0</div>
+        </div>
+    </div>
+
+    <div class="chart-wrap">
+        <div class="chart-title">Platform Overview Chart</div>
+        <canvas id="adminOverviewChart" height="90"></canvas>
     </div>
 
     <!-- Users Table -->
@@ -159,6 +171,38 @@
         </table>
     </div>
 </main>
+
+<script th:inline="javascript">
+    const userCount = /*[[${userCount}]]*/ 0;
+    const txCount = /*[[${txCount}]]*/ 0;
+    const adminCount = /*[[${adminCount}]]*/ 0;
+
+    const ctx = document.getElementById("adminOverviewChart");
+    if (ctx) {
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["Users", "Transactions", "Admins"],
+                datasets: [{
+                    label: "Count",
+                    data: [userCount, txCount, adminCount],
+                    backgroundColor: ["#d4a017", "#2ecc71", "#e63946"],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: "#e8e8e8" } }
+                },
+                scales: {
+                    x: { ticks: { color: "#9ba3b8" }, grid: { color: "rgba(255,255,255,0.08)" } },
+                    y: { ticks: { color: "#9ba3b8" }, grid: { color: "rgba(255,255,255,0.08)" }, beginAtZero: true }
+                }
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

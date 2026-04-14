@@ -35,6 +35,21 @@
                 <p id="dashSubtitle">Welcome back 👋</p>
             </div>
 
+            <div class="card insight-card" th:if="${budgetExceeded}">
+                <div class="insight-icon">⚠</div>
+                <div>
+                    <strong>Budget Alert</strong>
+                    <p>
+                        Expense budget se exceed ho gaya hai.
+                        Spent:
+                        <span th:text="'₹' + ${#numbers.formatDecimal(totalExpense, 1, 'COMMA', 0, 'POINT')}">₹0</span>
+                        |
+                        Budget:
+                        <span th:text="'₹' + ${#numbers.formatDecimal(monthlyBudget, 1, 'COMMA', 0, 'POINT')}">₹0</span>
+                    </p>
+                </div>
+            </div>
+
             <!-- METRICS -->
             <div class="metrics-grid">
 
@@ -128,38 +143,161 @@
                     </p>
                 </div>
             </div>
-<div style="width: 50%; max-width: 400px; padding: 50px;">
-    <canvas id="expenseChart"></canvas>
-</div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px;">
+                <div class="card" style="padding:16px;">
+                    <div class="card-title">Expense Pie Chart</div>
+                    <canvas id="expensePieChart" height="220"></canvas>
+                </div>
+                <div class="card" style="padding:16px;">
+                    <div class="card-title">Category Bar Chart</div>
+                    <canvas id="categoryBarChart" height="220"></canvas>
+                </div>
+                <div class="card" style="padding:16px;">
+                    <div class="card-title">Income vs Expense Trend</div>
+                    <canvas id="trendLineChart" height="220"></canvas>
+                </div>
+                <div class="card" style="padding:16px;">
+                    <div class="card-title">Transaction Scatter Chart</div>
+                    <canvas id="transactionScatterChart" height="220"></canvas>
+                </div>
+            </div>
         </section>
         <div th:replace="footer :: footer"></div>
 
     </main>
 
-    <script>
-const ctx = document.getElementById('expenseChart');
+    <script th:inline="javascript">
+        const categoryBreakdown = /*[[${categoryBreakdown}]]*/ {};
+        const chartTransactions = /*[[${chartTransactions}]]*/ [];
 
-new Chart(ctx, {
-    type: 'doughnut',  // can change to 'bar' or 'line'
-    data: {
-        labels: ['Food', 'Rent', 'Transport', 'Shopping', 'Other'],
-        datasets: [{
-            label: 'Expenses',
-            data: [3000, 8000, 2000, 1500, 1000],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                labels: {
-                    color: "#ffffff"
+        const fallbackColors = ["#f5a623", "#2ecc71", "#3498db", "#9b59b6", "#e74c3c", "#1abc9c", "#f39c12"];
+        const categoryLabels = Object.keys(categoryBreakdown);
+        const categoryValues = Object.values(categoryBreakdown);
+
+        // Pie Chart - Expense share by category
+        const pieCtx = document.getElementById("expensePieChart");
+        if (pieCtx && categoryLabels.length > 0) {
+            new Chart(pieCtx, {
+                type: "pie",
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        label: "Expense by Category",
+                        data: categoryValues,
+                        backgroundColor: fallbackColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: "#ffffff" } } }
                 }
-            }
+            });
         }
-    }
-});
-</script>
+
+        // Bar Chart - category-wise expenses
+        const barCtx = document.getElementById("categoryBarChart");
+        if (barCtx && categoryLabels.length > 0) {
+            new Chart(barCtx, {
+                type: "bar",
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        label: "Expenses",
+                        data: categoryValues,
+                        backgroundColor: "#f5a623"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { ticks: { color: "#d1d5db" }, grid: { color: "rgba(255,255,255,0.08)" } },
+                        y: { ticks: { color: "#d1d5db" }, grid: { color: "rgba(255,255,255,0.08)" } }
+                    },
+                    plugins: { legend: { labels: { color: "#ffffff" } } }
+                }
+            });
+        }
+
+        // Prepare date-wise totals from user transactions
+        const dailySummary = {};
+        chartTransactions.forEach(tx => {
+            const date = tx.date || "Unknown";
+            if (!dailySummary[date]) dailySummary[date] = { income: 0, expense: 0 };
+            if ((tx.type || "").toUpperCase() === "INCOME") {
+                dailySummary[date].income += Number(tx.amount || 0);
+            } else {
+                dailySummary[date].expense += Number(tx.amount || 0);
+            }
+        });
+
+        const trendLabels = Object.keys(dailySummary);
+        const trendIncome = trendLabels.map(d => dailySummary[d].income);
+        const trendExpense = trendLabels.map(d => dailySummary[d].expense);
+
+        // Line Chart - daily income/expense trend
+        const lineCtx = document.getElementById("trendLineChart");
+        if (lineCtx && trendLabels.length > 0) {
+            new Chart(lineCtx, {
+                type: "line",
+                data: {
+                    labels: trendLabels,
+                    datasets: [
+                        { label: "Income", data: trendIncome, borderColor: "#2ecc71", backgroundColor: "rgba(46,204,113,0.2)", tension: 0.3 },
+                        { label: "Expense", data: trendExpense, borderColor: "#e74c3c", backgroundColor: "rgba(231,76,60,0.2)", tension: 0.3 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { ticks: { color: "#d1d5db" }, grid: { color: "rgba(255,255,255,0.08)" } },
+                        y: { ticks: { color: "#d1d5db" }, grid: { color: "rgba(255,255,255,0.08)" } }
+                    },
+                    plugins: { legend: { labels: { color: "#ffffff" } } }
+                }
+            });
+        }
+
+        // Scatter Chart - each transaction point
+        const incomePoints = [];
+        const expensePoints = [];
+        chartTransactions.forEach((tx, idx) => {
+            const point = { x: idx + 1, y: Number(tx.amount || 0) };
+            if ((tx.type || "").toUpperCase() === "INCOME") {
+                incomePoints.push(point);
+            } else {
+                expensePoints.push(point);
+            }
+        });
+
+        const scatterCtx = document.getElementById("transactionScatterChart");
+        if (scatterCtx && chartTransactions.length > 0) {
+            new Chart(scatterCtx, {
+                type: "scatter",
+                data: {
+                    datasets: [
+                        { label: "Income", data: incomePoints, backgroundColor: "#2ecc71" },
+                        { label: "Expense", data: expensePoints, backgroundColor: "#e74c3c" }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: { display: true, text: "Transaction Index", color: "#d1d5db" },
+                            ticks: { color: "#d1d5db" },
+                            grid: { color: "rgba(255,255,255,0.08)" }
+                        },
+                        y: {
+                            title: { display: true, text: "Amount", color: "#d1d5db" },
+                            ticks: { color: "#d1d5db" },
+                            grid: { color: "rgba(255,255,255,0.08)" }
+                        }
+                    },
+                    plugins: { legend: { labels: { color: "#ffffff" } } }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

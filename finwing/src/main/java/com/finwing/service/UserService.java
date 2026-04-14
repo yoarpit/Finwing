@@ -35,6 +35,7 @@ public class UserService {
         user.setUsername(dto.getUserName());
         user.setGender(dto.getGender());
         user.setMobileNo(dto.getMobileNo());
+        user.setMonthlyBudget(dto.getMonthlyBudget() != null ? dto.getMonthlyBudget() : 0.0);
         user.setIsActive(true);
         userRepository.save(user);
         return "SUCCESS";
