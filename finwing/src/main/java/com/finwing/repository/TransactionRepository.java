@@ -25,10 +25,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             LocalDateTime to
     );
 
-    @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.user = :user AND t.type = :type")
+    @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.user = :user AND LOWER(t.type) = LOWER(:type)")
     Double sumAmountByUserAndType(@Param("user") User user, @Param("type") String type);
 
-    @Query("SELECT t.category, SUM(t.amount) FROM Transaction t WHERE t.user = :user AND t.type = 'expense' GROUP BY t.category")
+    @Query("SELECT t.category, SUM(t.amount) FROM Transaction t WHERE t.user = :user AND LOWER(t.type) = 'expense' GROUP BY t.category")
     List<Object[]> sumExpensesByCategory(@Param("user") User user);
 
     // ✅ FIXED

@@ -31,10 +31,20 @@ import java.util.List;
         private String currency;
         @Column(nullable = false)
         private String fullName;
+        @Column(nullable = false)
+        private Double monthlyBudget = 0.0;
         
-        @Column(columnDefinition = "boolean default true")
-        private Boolean isActive = true;
+        
+        @Column(nullable = false, columnDefinition = "boolean default true")
+        private boolean isActive = true;
 
+        public void setIsActive(boolean isActive) {
+    this.isActive = isActive;
+}
+
+public boolean getIsActive() {
+    return this.isActive;
+}
         @org.hibernate.annotations.CreationTimestamp
         @Column(updatable = false)
         private java.time.LocalDateTime createdAt;

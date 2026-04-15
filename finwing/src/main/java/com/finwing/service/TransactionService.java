@@ -65,11 +65,17 @@ public class TransactionService {
 
         double netBalance = totalIncome - totalExpense;
         double savingsRate = totalIncome > 0 ? ((netBalance / totalIncome) * 100) : 0;
+        double monthlyBudget = user.getMonthlyBudget() != null ? user.getMonthlyBudget() : 0.0;
+        boolean budgetExceeded = monthlyBudget > 0 && totalExpense > monthlyBudget;
+        double budgetRemaining = monthlyBudget - totalExpense;
 
         stats.put("totalIncome", totalIncome);
         stats.put("totalExpense", totalExpense);
         stats.put("netBalance", netBalance);
         stats.put("savingsRate", String.format("%.1f", savingsRate));
+        stats.put("monthlyBudget", monthlyBudget);
+        stats.put("budgetExceeded", budgetExceeded);
+        stats.put("budgetRemaining", budgetRemaining);
 
         // Category breakdown
         List<Object[]> breakdown = transactionRepository.sumExpensesByCategory(user);
@@ -83,6 +89,20 @@ public class TransactionService {
         List<Transaction> allTx = transactionRepository.findByUserOrderByCreatedAtDesc(user);
         stats.put("recentTransactions", allTx.size() > 6 ? allTx.subList(0, 6) : allTx);
         stats.put("totalCount", allTx.size());
+
+        // Chart data (latest 30 transactions)
+        List<Map<String, Object>> chartTransactions = new ArrayList<>();
+        int chartLimit = Math.min(allTx.size(), 30);
+        for (int i = chartLimit - 1; i >= 0; i--) {
+            Transaction tx = allTx.get(i);
+            Map<String, Object> point = new LinkedHashMap<>();
+            point.put("date", tx.getDate() != null ? tx.getDate().toString() : "");
+            point.put("type", tx.getType());
+            point.put("category", tx.getCategory());
+            point.put("amount", tx.getAmount() != null ? tx.getAmount() : 0.0);
+            chartTransactions.add(point);
+        }
+        stats.put("chartTransactions", chartTransactions);
 
         return stats;
     }

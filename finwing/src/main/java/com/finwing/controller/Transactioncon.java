@@ -14,8 +14,10 @@ import com.finwing.dto.TransactionDto;
 import com.finwing.entity.Transaction;
 import com.finwing.entity.User;
 import com.finwing.repository.TransactionRepository;
+import com.finwing.service.TransactionService;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
+import java.util.Map;
 
 @Controller
 public class Transactioncon {
@@ -23,14 +25,21 @@ public class Transactioncon {
     @Autowired
     TransactionRepository transactionrepository;
 
+    @Autowired
+    TransactionService transactionService;
+
     @GetMapping("/transaction")
     public String showTransaction(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
         List<Transaction> transactions = transactionrepository.findByUser(user);
+        Map<String, Object> stats = transactionService.getDashboardStats(user);
         model.addAttribute("transactions", transactions);
         model.addAttribute("transactionForm", new TransactionDto()); 
+        model.addAttribute("budgetExceeded", stats.get("budgetExceeded"));
+        model.addAttribute("monthlyBudget", stats.get("monthlyBudget"));
+        model.addAttribute("totalExpense", stats.get("totalExpense"));
         return "transaction";
     }
 
