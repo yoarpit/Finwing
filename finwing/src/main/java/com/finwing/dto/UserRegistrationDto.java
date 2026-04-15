@@ -19,13 +19,9 @@ public class UserRegistrationDto {
     private String mobileNo;
     private String gender;
     private String currency;
-<<<<<<< HEAD
     
-    private Boolean is_active;
-=======
     private Double monthlyBudget;
     private Boolean is_active = true;
->>>>>>> 270937aaa9b76eb90922b24ff83670efbd0557d4
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private java.time.LocalDateTime created_at;
 
