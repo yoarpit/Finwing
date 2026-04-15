@@ -9,8 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FinwingApplication {
 
-    public static void main(String[] args) {
+    static {
+        // Ensure PostgreSQL gets a valid timezone in all boot paths (app + tests).
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+    }
+
+    public static void main(String[] args) {
         SpringApplication.run(FinwingApplication.class, args);
     }
 }

@@ -35,12 +35,27 @@
                 <p id="dashSubtitle">Welcome back 👋</p>
             </div>
 
+            <div class="card" style="padding:12px 18px;margin-bottom:14px;">
+                <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;font-size:0.95rem;">
+                    <div>
+                        <span style="opacity:0.8;">Monthly Budget:</span>
+                        <strong style="margin-left:6px;color:var(--gold);"
+                                th:text="${monthlyBudget != null ? '₹' + #numbers.formatDecimal(monthlyBudget, 1, 'COMMA', 0, 'POINT') : '₹0'}">₹0</strong>
+                    </div>
+                    <div>
+                        <span style="opacity:0.8;">Current Expense:</span>
+                        <strong style="margin-left:6px;color:#ff6b6b;"
+                                th:text="${totalExpense != null ? '₹' + #numbers.formatDecimal(totalExpense, 1, 'COMMA', 0, 'POINT') : '₹0'}">₹0</strong>
+                    </div>
+                </div>
+            </div>
+
             <div class="card insight-card" th:if="${budgetExceeded}">
                 <div class="insight-icon">⚠</div>
                 <div>
                     <strong>Budget Alert</strong>
                     <p>
-                        Expense budget se exceed ho gaya hai.
+                        The expense budget has been exceeded
                         Spent:
                         <span th:text="'₹' + ${#numbers.formatDecimal(totalExpense, 1, 'COMMA', 0, 'POINT')}">₹0</span>
                         |
@@ -89,14 +104,17 @@
                 <a th:href="@{/transaction}" class="btn-primary">Add transactions →</a>
             </div>
             <div th:unless="${#maps.isEmpty(categoryBreakdown)}">
-                <div th:each="entry : ${categoryBreakdown}" class="cat-row">
-                    <span class="cat-label" th:text="${entry.key}">Category</span>
-                    <div class="cat-bar-wrap">
-                        <div class="cat-bar"
-                             th:style="'width:' + (${totalExpense} > 0 ? ${#numbers.formatDecimal(entry.value / totalExpense * 100, 1, 0)} : 0) + '%;background:var(--gold)'">
+                <div th:each="entry : ${categoryBreakdown}" class="tx-item">
+                    <div class="tx-left">
+                        <div class="tx-dot" style="background:#e74c3c;"></div>
+                        <div>
+                            <div class="tx-desc" th:text="${entry.key}">Category</div>
+                            <div class="tx-cat"
+                                 th:text="${totalExpense > 0 ? #numbers.formatDecimal((entry.value / totalExpense) * 100, 1, 0) + '%' : '0%'}">0%</div>
                         </div>
                     </div>
-                    <span class="cat-amount" th:text="'₹' + ${#numbers.formatDecimal(entry.value, 1, 'COMMA', 0, 'POINT')}">₹0</span>
+                    <div class="tx-amount expense"
+                         th:text="'₹' + ${#numbers.formatDecimal(entry.value, 1, 'COMMA', 0, 'POINT')}">₹0</div>
                 </div>
             </div>
         </div>
@@ -144,7 +162,7 @@
                 </div>
             </div>
 
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px;">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:16px;margin-top:20px;">
                 <div class="card" style="padding:16px;">
                     <div class="card-title">Expense Pie Chart</div>
                     <canvas id="expensePieChart" height="220"></canvas>
@@ -155,11 +173,11 @@
                 </div>
                 <div class="card" style="padding:16px;">
                     <div class="card-title">Income vs Expense Trend</div>
-                    <canvas id="trendLineChart" height="220"></canvas>
+                    <canvas id="trendLineChart" height="420"></canvas>
                 </div>
                 <div class="card" style="padding:16px;">
                     <div class="card-title">Transaction Scatter Chart</div>
-                    <canvas id="transactionScatterChart" height="220"></canvas>
+                    <canvas id="transactionScatterChart" height="420"></canvas>
                 </div>
             </div>
         </section>

@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${appName}">Finwing</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script th:src="@{/js/script.js}"></script>
-
+<th:block th:fragment="header">
     <style>
-        /* ══════════════════════════════════════════
-           RESPONSIVE NAVBAR — Mobile-first additions
-           Works with both style.css and homestyle.css
-        ══════════════════════════════════════════ */
-
-        /* ── Hamburger button (hidden on desktop) ── */
         .nav-toggle {
             display: none;
             flex-direction: column;
@@ -30,10 +16,7 @@
             transition: all 0.2s ease;
             z-index: 200;
         }
-        .nav-toggle:hover {
-            border-color: var(--gold, var(--accent-indigo, #6366f1));
-            background: var(--gold-glow, rgba(99,102,241,0.08));
-        }
+
         .nav-toggle span {
             display: block;
             width: 18px;
@@ -44,35 +27,34 @@
             transform-origin: center;
         }
 
-        /* Animated X when open */
         .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* ── Mobile Drawer Overlay ── */
         .nav-overlay {
-            display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.55);
             backdrop-filter: blur(3px);
             z-index: 150;
             opacity: 0;
+            pointer-events: none;
             transition: opacity 0.3s ease;
         }
+
         .nav-overlay.visible {
             opacity: 1;
+            pointer-events: auto;
         }
 
-        /* ── Mobile Drawer ── */
         .nav-drawer {
             position: fixed;
             top: 0;
             right: -280px;
             width: 260px;
             height: 100vh;
-            background: var(--bg2, var(--bg-secondary, #111118));
-            border-left: 1px solid var(--border, var(--border, #1e1e2e));
+            background: var(--bg2, #111118);
+            border-left: 1px solid var(--border, #1e1e2e);
             z-index: 160;
             display: flex;
             flex-direction: column;
@@ -80,11 +62,9 @@
             transition: right 0.32s cubic-bezier(.4,0,.2,1);
             box-shadow: -8px 0 40px rgba(0,0,0,0.5);
         }
-        .nav-drawer.open {
-            right: 0;
-        }
 
-        /* Drawer header */
+        .nav-drawer.open { right: 0; }
+
         .drawer-header {
             display: flex;
             align-items: center;
@@ -92,15 +72,17 @@
             padding: 18px 20px;
             border-bottom: 1px solid var(--border, #1e1e2e);
         }
+
         .drawer-logo {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .drawer-logo-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--gold, #d4af37), var(--gold-dim, var(--accent-amber, #8b6914)));
+            background: linear-gradient(135deg, var(--gold, #d4af37), #8b6914);
             border-radius: 7px;
             display: flex;
             align-items: center;
@@ -109,26 +91,16 @@
             color: #0a0a0f;
             font-weight: bold;
         }
-        .drawer-logo-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text, var(--text-primary, #e8e4dc));
-        }
+
         .drawer-close {
             background: none;
             border: none;
-            color: var(--muted, var(--text-secondary, #888));
+            color: var(--muted, #888);
             font-size: 22px;
             cursor: pointer;
-            padding: 4px;
             line-height: 1;
-            transition: color 0.2s;
-        }
-        .drawer-close:hover {
-            color: var(--text, var(--text-primary, #e8e4dc));
         }
 
-        /* Drawer nav links */
         .drawer-nav {
             display: flex;
             flex-direction: column;
@@ -136,6 +108,7 @@
             gap: 4px;
             flex: 1;
         }
+
         .drawer-link {
             display: flex;
             align-items: center;
@@ -144,33 +117,22 @@
             border-radius: 9px;
             font-size: 14px;
             font-weight: 500;
-            color: var(--muted, var(--text-secondary, #888));
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
-            font-family: inherit;
+            color: var(--muted, #888);
             transition: all 0.2s ease;
             text-decoration: none;
         }
+
         .drawer-link:hover {
-            background: var(--bg3, var(--bg-card-hover, #16161f));
-            color: var(--text, var(--text-primary, #e8e4dc));
+            background: var(--bg3, #16161f);
+            color: var(--text, #e8e4dc);
         }
-        .drawer-link.active {
-            background: var(--gold-glow, rgba(99,102,241,0.1));
-            color: var(--gold, var(--accent-indigo, #6366f1));
-            border: 1px solid rgba(212,175,55,0.18);
-        }
+
         .drawer-link-icon {
-            font-size: 16px;
             width: 20px;
             text-align: center;
             flex-shrink: 0;
         }
 
-        /* Drawer footer — status dot */
         .drawer-footer {
             padding: 16px 20px;
             border-top: 1px solid var(--border, #1e1e2e);
@@ -178,125 +140,76 @@
             align-items: center;
             gap: 8px;
         }
-        .drawer-footer .dot,
+
         .drawer-footer .live-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--green, var(--accent-green, #22c55e));
-            box-shadow: 0 0 6px var(--green, var(--accent-green, #22c55e));
-            flex-shrink: 0;
-        }
-        .drawer-footer span {
-            font-size: 12px;
-            color: var(--muted, var(--text-secondary, #888));
-            font-family: var(--mono, monospace);
+            background: var(--green, #22c55e);
+            box-shadow: 0 0 6px var(--green, #22c55e);
         }
 
-        /* ══════════════════════════════════════════
-           BREAKPOINT — show hamburger below 768px
-        ══════════════════════════════════════════ */
+        .drawer-footer span {
+            font-size: 12px;
+            color: var(--muted, #888);
+            font-family: monospace;
+        }
+
+
         @media (max-width: 768px) {
-            /* Hide desktop nav items */
             .header .nav,
-            .header .status-dot,
-            .navbar .nav-links,
-            .navbar .nav-right {
+            .header .status-dot {
                 display: none !important;
             }
 
-            /* Show hamburger */
+            .header-inner {
+                justify-content: space-between;
+            }
+
             .nav-toggle {
                 display: flex;
             }
 
-            /* Make header/navbar a flex row with space-between */
-            .header-inner,
-            .navbar {
-                justify-content: space-between;
-            }
-
-            /* Show overlay when active */
-            .nav-overlay {
-                display: block;
-            }
         }
 
-        /* ══════════════════════════════════════════
-           Prevent body scroll when drawer is open
-        ══════════════════════════════════════════ */
         body.drawer-open {
             overflow: hidden;
         }
     </style>
-</head>
-<body>
 
-    <!-- ════════════════════════════════════════
-         OVERLAY (click to close drawer)
-    ════════════════════════════════════════ -->
     <div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
 
-    <!-- ════════════════════════════════════════
-         MOBILE DRAWER
-    ════════════════════════════════════════ -->
     <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
-
-        <!-- Drawer Header -->
         <div class="drawer-header">
             <div class="drawer-logo">
                 <div class="drawer-logo-icon">₹</div>
                 <span class="drawer-logo-name">Finwing</span>
             </div>
-            <button class="drawer-close" onclick="closeDrawer()" aria-label="Close menu">✕</button>
+            <button class="drawer-close" onclick="closeDrawer()" aria-label="Close menu">x</button>
         </div>
 
-        <!-- ── Logged OUT nav links ── -->
         <nav class="drawer-nav" th:if="${session.user == null}">
-            <a class="drawer-link active" href="/" onclick="closeDrawer()">
-                <span class="drawer-link-icon">🏠</span> Home
-            </a>
-            <a class="drawer-link" href="/transaction" onclick="closeDrawer()">
-                <span class="drawer-link-icon">💳</span> Transactions
-            </a>
-            <a class="drawer-link" href="/login" onclick="closeDrawer()">
-                <span class="drawer-link-icon">🔑</span> Login
-            </a>
-            <a class="drawer-link" href="/registration" onclick="closeDrawer()">
-                <span class="drawer-link-icon">✨</span> Sign Up
-            </a>
+            <a class="drawer-link" href="/" onclick="closeDrawer()"><span class="drawer-link-icon">🏠</span>Home</a>
+            <a class="drawer-link" href="/transaction" onclick="closeDrawer()"><span class="drawer-link-icon">💳</span>Transactions</a>
+            <a class="drawer-link" href="/login" onclick="closeDrawer()"><span class="drawer-link-icon">🔑</span>Login</a>
+            <a class="drawer-link" href="/registration" onclick="closeDrawer()"><span class="drawer-link-icon">✨</span>Sign Up</a>
         </nav>
 
-        <!-- ── Logged IN nav links ── -->
         <nav class="drawer-nav" th:if="${session.user != null}">
-            <a class="drawer-link active" href="/" onclick="closeDrawer()">
-                <span class="drawer-link-icon">🏠</span> Home
-            </a>
-            <a class="drawer-link" href="/transaction" onclick="closeDrawer()">
-                <span class="drawer-link-icon">💳</span> Transactions
-            </a>
-            <a class="drawer-link" href="/dashboard" onclick="closeDrawer()">
-                <span class="drawer-link-icon">👤</span> Dashboard
-            </a>
-            <a class="drawer-link" href="/logout" onclick="closeDrawer()">
-                <span class="drawer-link-icon">🚪</span> Logout
-            </a>
+            <a class="drawer-link" href="/" onclick="closeDrawer()"><span class="drawer-link-icon">🏠</span>Home</a>
+            <a class="drawer-link" href="/transaction" onclick="closeDrawer()"><span class="drawer-link-icon">💳</span>Transactions</a>
+            <a class="drawer-link" href="/dashboard" onclick="closeDrawer()"><span class="drawer-link-icon">👤</span>Dashboard</a>
+            <a class="drawer-link" href="/logout" onclick="closeDrawer()"><span class="drawer-link-icon">🚪</span>Logout</a>
         </nav>
 
-        <!-- Drawer Footer -->
         <div class="drawer-footer">
-            <div class="dot live-dot"></div>
+            <div class="live-dot"></div>
             <span id="drawerMonthLabel">April 2026</span>
         </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         HEADER — NOT logged in
-    ════════════════════════════════════════ -->
-    <header class="header" th:if="${session.user == null}">
-        <div th:fragment="header" class="header-inner">
-
-            <!-- Logo -->
+    <header class="header">
+        <div class="header-inner">
             <div class="logo">
                 <div class="logo-icon">₹</div>
                 <div>
@@ -305,29 +218,26 @@
                 </div>
             </div>
 
-            <!-- Desktop Nav -->
-            <nav class="nav">
-                <button class="tab-btn active" data-tab="dashboard"
-                        onclick="window.location.href='/'">Home</button>
-                <button class="tab-btn" data-tab="transactions"
-                        onclick="window.location.href='/transaction'">Transactions</button>
-                <button class="tab-btn"
-                        onclick="window.location.href='/login'">Login</button>
-                <button class="tab-btn"
-                        onclick="window.location.href='/registration'">Sign Up</button>
+            <nav class="nav" th:if="${session.user == null}">
+                <button class="tab-btn active" onclick="window.location.href='/'">Home</button>
+                <button class="tab-btn" onclick="window.location.href='/transaction'">Transactions</button>
+                <button class="tab-btn" onclick="window.location.href='/login'">Login</button>
+                <button class="tab-btn" onclick="window.location.href='/registration'">Sign Up</button>
             </nav>
 
-            <!-- Desktop Status -->
+            <nav class="nav" th:if="${session.user != null}">
+                <button class="tab-btn active" onclick="window.location.href='/'">Home</button>
+                <button class="tab-btn" onclick="window.location.href='/transaction'">Transactions</button>
+                <button class="tab-btn" onclick="window.location.href='/dashboard'">Dashboard</button>
+                <button class="tab-btn" onclick="window.location.href='/logout'">Logout</button>
+            </nav>
+
             <div class="status-dot">
                 <div class="dot"></div>
                 <span id="monthLabel">April 2026</span>
             </div>
 
-            <!-- Mobile Hamburger -->
-            <button class="nav-toggle" id="navToggle"
-                    onclick="toggleDrawer()"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false">
+            <button class="nav-toggle" id="navToggle" onclick="toggleDrawer()" aria-label="Open navigation menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -335,70 +245,22 @@
         </div>
     </header>
 
-
-    <!-- ════════════════════════════════════════
-         HEADER — Logged in
-    ════════════════════════════════════════ -->
-    <header class="header" th:if="${session.user != null}">
-        <div th:fragment="header" class="header-inner">
-
-            <!-- Logo -->
-            <div class="logo">
-                <div class="logo-icon">₹</div>
-                <div>
-                    <div class="logo-name">Finwing</div>
-                    <div class="logo-sub">FINANCE MANAGER</div>
-                </div>
-            </div>
-
-            <!-- Desktop Nav -->
-            <nav class="nav">
-                <button class="tab-btn active" data-tab="dashboard"
-                        onclick="window.location.href='/'">Home</button>
-                <button class="tab-btn" data-tab="transactions"
-                        onclick="window.location.href='/transaction'">Transactions</button>
-                <button class="tab-btn"
-                        onclick="window.location.href='/dashboard'">Dashboard</button>
-                <button class="tab-btn"
-                        onclick="window.location.href='/logout'">Logout</button>
-            </nav>
-
-            <!-- Desktop Status -->
-            <div class="status-dot">
-                <div class="dot"></div>
-                <span id="monthLabel">April 2026</span>
-            </div>
-
-            <!-- Mobile Hamburger -->
-            <button class="nav-toggle" id="navToggle"
-                    onclick="toggleDrawer()"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </header>
-
-
-    <!-- ════════════════════════════════════════
-         DRAWER SCRIPT
-    ════════════════════════════════════════ -->
     <script>
         function toggleDrawer() {
-            const drawer   = document.getElementById('navDrawer');
-            const overlay  = document.getElementById('navOverlay');
-            const toggle   = document.getElementById('navToggle');
-            const isOpen   = drawer.classList.contains('open');
-            isOpen ? closeDrawer() : openDrawer();
+            const drawer = document.getElementById('navDrawer');
+            const isOpen = drawer.classList.contains('open');
+            if (isOpen) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
         }
 
         function openDrawer() {
-            const drawer  = document.getElementById('navDrawer');
+            const drawer = document.getElementById('navDrawer');
             const overlay = document.getElementById('navOverlay');
-            const toggle  = document.getElementById('navToggle');
-
+            const toggle = document.getElementById('navToggle');
+            if (!drawer || !overlay || !toggle) return;
             drawer.classList.add('open');
             overlay.classList.add('visible');
             toggle.classList.add('open');
@@ -407,30 +269,29 @@
         }
 
         function closeDrawer() {
-            const drawer  = document.getElementById('navDrawer');
+            const drawer = document.getElementById('navDrawer');
             const overlay = document.getElementById('navOverlay');
-            const toggle  = document.getElementById('navToggle');
-
-            drawer.classList.remove('open');
-            overlay.classList.remove('visible');
-            toggle && toggle.classList.remove('open');
-            toggle && toggle.setAttribute('aria-expanded', 'false');
+            const toggle = document.getElementById('navToggle');
+            if (drawer) drawer.classList.remove('open');
+            if (overlay) overlay.classList.remove('visible');
+            if (toggle) {
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
             document.body.classList.remove('drawer-open');
         }
 
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') closeDrawer();
         });
 
-        // Sync month label
-        const months = ['January','February','March','April','May','June',
-                        'July','August','September','October','November','December'];
-        const now = new Date();
-        const label = months[now.getMonth()] + ' ' + now.getFullYear();
-        document.querySelectorAll('#monthLabel, #drawerMonthLabel')
-                .forEach(el => el.textContent = label);
+        (function syncMonthLabel() {
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const now = new Date();
+            const label = months[now.getMonth()] + ' ' + now.getFullYear();
+            document.querySelectorAll('#monthLabel, #drawerMonthLabel').forEach(function (el) {
+                el.textContent = label;
+            });
+        })();
     </script>
-
-</body>
-</html>
+</th:block>
