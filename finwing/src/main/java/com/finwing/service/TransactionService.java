@@ -53,6 +53,43 @@ public class TransactionService {
         return false;
     }
 
+    // Get single transaction if it belongs to logged-in user
+    public Transaction getUserTransactionById(Long id, User user) {
+        Optional<Transaction> opt = transactionRepository.findById(id);
+        if (opt.isPresent() && opt.get().getUser().getUserId().equals(user.getUserId())) {
+            return opt.get();
+        }
+        return null;
+    }
+
+    // Update transaction (only if it belongs to user)
+    public boolean updateTransaction(
+            Long id,
+            Double amount,
+            String type,
+            String category,
+            String description,
+            LocalDate date,
+            User user) {
+        Optional<Transaction> opt = transactionRepository.findById(id);
+        if (opt.isEmpty()) {
+            return false;
+        }
+
+        Transaction tx = opt.get();
+        if (!tx.getUser().getUserId().equals(user.getUserId())) {
+            return false;
+        }
+
+        tx.setAmount(amount);
+        tx.setType(type);
+        tx.setCategory(category);
+        tx.setDescription(description);
+        tx.setDate(date);
+        transactionRepository.save(tx);
+        return true;
+    }
+
     // Dashboard summary stats
     public Map<String, Object> getDashboardStats(User user) {
         Map<String, Object> stats = new HashMap<>();

@@ -48,7 +48,7 @@ public class AdminController {
     public String showRegistrationform(Model model, HttpSession session) {
         if (isAdminLoggedIn(session)) return "redirect:/admin/admindashboard";
         model.addAttribute("admin", new AdminRegistractionDto());
-        return "Admin/adminRegistration";  // ✅ FIXED: was "Admin/adminRegistration"
+        return "Admin/adminRegistration"; 
     }
 
     // ─── HANDLE REGISTER ──────────────────────────────────────────────────────
