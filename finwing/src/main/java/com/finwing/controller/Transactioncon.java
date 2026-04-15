@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,14 +30,34 @@ public class Transactioncon {
     TransactionService transactionService;
 
     @GetMapping("/transaction")
-    public String showTransaction(Model model, HttpSession session) {
+    public String showTransaction(
+            @RequestParam(required = false) Long editId,
+            Model model,
+            HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
         List<Transaction> transactions = transactionrepository.findByUser(user);
         Map<String, Object> stats = transactionService.getDashboardStats(user);
         model.addAttribute("transactions", transactions);
-        model.addAttribute("transactionForm", new TransactionDto()); 
+        TransactionDto form = new TransactionDto();
+        boolean editMode = false;
+
+        if (editId != null) {
+            Transaction tx = transactionService.getUserTransactionById(editId, user);
+            if (tx != null) {
+                form.setAmount(tx.getAmount());
+                form.setType(tx.getType());
+                form.setCategory(tx.getCategory());
+                form.setDescription(tx.getDescription());
+                form.setDate(tx.getDate());
+                editMode = true;
+                model.addAttribute("editId", editId);
+            }
+        }
+
+        model.addAttribute("editMode", editMode);
+        model.addAttribute("transactionForm", form);
         model.addAttribute("budgetExceeded", stats.get("budgetExceeded"));
         model.addAttribute("monthlyBudget", stats.get("monthlyBudget"));
         model.addAttribute("totalExpense", stats.get("totalExpense"));
@@ -45,6 +66,7 @@ public class Transactioncon {
 
     @PostMapping("/transaction")
     public String makeTransaction(
+            @RequestParam(required = false) Long id,
             @RequestParam Double amount,
             @RequestParam String type,
             @RequestParam String category,
@@ -55,16 +77,40 @@ public class Transactioncon {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        transaction.setType(type);
-        transaction.setCategory(category);
-        transaction.setDescription(description);
-        transaction.setDate(date != null ? date : LocalDate.now());
-        transaction.setCreatedAt(LocalDateTime.now());
-        transaction.setUser(user);
-        transactionrepository.save(transaction);
+        if (id != null) {
+            boolean updated = transactionService.updateTransaction(
+                    id,
+                    amount,
+                    type,
+                    category,
+                    description,
+                    date != null ? date : LocalDate.now(),
+                    user
+            );
+            if (!updated) {
+                return "redirect:/transaction";
+            }
+        } else {
+            Transaction transaction = new Transaction();
+            transaction.setAmount(amount);
+            transaction.setType(type);
+            transaction.setCategory(category);
+            transaction.setDescription(description);
+            transaction.setDate(date != null ? date : LocalDate.now());
+            transaction.setCreatedAt(LocalDateTime.now());
+            transaction.setUser(user);
+            transactionrepository.save(transaction);
+        }
 
+        return "redirect:/transaction";
+    }
+
+    @PostMapping("/transaction/delete/{id}")
+    public String deleteTransaction(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        transactionService.deleteTransaction(id, user);
         return "redirect:/transaction";
     }
 }
